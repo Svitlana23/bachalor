@@ -14,10 +14,10 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <!--    <script src="ajax.js"></script>-->
     <script>
-       /* function funcBefore(){
+        function funcBefore(){
             $("#information").text("Очікування даних");
         }
-        */
+        
         $(function () {
             $("#submit").bind("click", function (e){
                 e.preventDefault();
@@ -25,26 +25,33 @@
                     method:'get',
                     url:"handler.php",
                     type:"GET",
+                    dataType: "json",
                     data: {
-                        'selectedValue': $('#x_xp').val(),
+                        'selectedValue': $('#x_xp').val(), 
+                        'selectedValue1': $('#_fi').val()
                     },
-                    //beforeSend: funcBefore,
+                    beforeSend: funcBefore,
                     success: function funcSuccess($json10) {
-                        document.querySelector('.demo').innerHTML += 'response: '+$json10+'<br>';
-                        $json10 = JSON.parse($json10);
+                        for($i=0;$i<10;$i++)
+                            {
+                                document.querySelector('.demo').innerHTML += 'response: '+$json10.prec[$i] +'<br>';
+                            }
+                        
+                        //$json10 = JSON.parse($json10);
                         $L=$("#L").val();
                         $A=$("#A").val();
                         $Ip=$("#Ip").val();
-                        $xp = $json10.xp;
+                        $xp = +$json10.xp;
+                        $x = +$json10.x;
+                        $fi = +$json10.fi;
                         $res=0;
                         for($i=0;$i<10;$i++)
                         {
-                            $fp=1000*$L/($Ip)*($A);
-                            $res=$fp;
+                            $fp=(1000 * $L) / ( $xp * Math.pow($Ip,$x) * Math.pow($A,(1/4)) * Math.pow(($fi ), (1/4)));
                         }
-                        $("#information").val($res);
-                        $("#information1").val($xp);
-                        console.log($xp);
+                        $("#information").val($fp);
+                        $("#information1").val($json10.prec);
+                        console.log($json10.prec[1]);
                     }
                     
             });
@@ -125,12 +132,6 @@
     
     <div>
         <form action="script_weather.php">
-<!--           Диапазон дней<br>
-
-            От <input type="date" name="begin" min="2000-01-01" max="2020-12-12" value="2016-10-28">
-            До <input type="date" name="end" min="2000-01-01" max="2020-12-12" value="2016-10-28">
--->
-<!--            <input type="button" name="out" value="Вывести">-->
             <button>Ввести дані погоди в БД</button>
         </form>
     </div>
@@ -246,7 +247,7 @@
                 <label for="Ip">Середньозважений нахил водозбору Ip (‰)= </label>
                 <input type="text" name="Ip" id="Ip" size="10" value="0.3">
                 <br>
-                <p>Для визначення проміжних параметрів x та x виберіть:</p>
+                <p>Для визначення проміжних параметрів x та xp виберіть:</p>
                 <p>Характеристика русла і пойми</p>
                 <?php
                     include "on.php"; 
@@ -257,11 +258,19 @@
                     mysql_free_result($result);
                     print'</select></td>';
                 ?>
-
+                <?php
+                    include "on.php"; 
+                    $query = "SELECT * FROM `tabl27`";
+                    $result = mysql_query($query) or die(mysql_error());
+                    print '<td><SELECT name="" id="_fi" required>';
+                    while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['type'].'</option>'; }
+                    mysql_free_result($result);
+                    print'</select></td>';
+                ?>
                 <input type="button" id="submit" value="Обчислити">
                 </form>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <h2 class="text-center">Результат</h2>
                 <div>
                 <label>Фр = </label>
@@ -269,6 +278,12 @@
                 <br>
                 <input type="text" name="" id="information1" size="50">
                 </div>
+            </div>
+            <div class="col-md-2">
+               <p><b>Оберіть інтервал часу для розрахунку</b></p>
+                Діапазон днів<br>
+                    Від <input type="date" name="begin" min="2000-01-01" max="2020-12-12" value="2016-10-28">
+                    До <input type="date" name="end" min="2000-01-01" max="2020-12-12" value="2016-10-28">
             </div>
         </div>
     </div>
