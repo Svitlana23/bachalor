@@ -1,0 +1,44 @@
+.bod{
+  background-color: #cfc3f7;
+    width:100%;
+}
+.place1 {
+    float:right;
+    list-style: none;
+}
+.place2 {
+    float:left;
+    list-style: none;
+    margin:0;
+}
+.place1 li{
+    margin: 18px 0 18px;
+}
+.place2 li{
+    margin: 12px 0 12px;
+}
+
+input{
+    border-radius: 5px;
+    border-color: #518bbe;
+    text-align: center;
+}
+.place2 input{
+    color:#0c0d0d;
+    font-weight: bold;
+}
+.calc{
+    height:60px;
+    width:92%;
+    margin-left: 9%;
+    font-size: 30px;
+    font-family:inherit;
+    border-color: rgba(5,5,5,0.5);
+    background-color: rgba(38, 36, 165, 0.8);
+    color:white;
+}
+#container{
+    min-width: 310px; 
+    height:400px; 
+    margin: 0 auto;
+}
