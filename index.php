@@ -35,7 +35,7 @@
                         $L=$("#L").val();
                         $A=$("#A").val();
                         $Ip=$("#Ip").val();
-                        $xp = +$json10.xp;
+                        $xp = $json10.xp;
                         $res=0;
                         for($i=0;$i<10;$i++)
                         {
