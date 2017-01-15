@@ -28,30 +28,46 @@
                     dataType: "json",
                     data: {
                         'selectedValue': $('#x_xp').val(), 
-                        'selectedValue1': $('#_fi').val()
+                        'selectedValue1': $('#_fi').val(),
+                        'selectedValue2': $('#rajon').val(),
+                        'selectedValue3': $('#_tp').val(),
+                        'selectedValue4': $('#_nsk').val()  
                     },
                     beforeSend: funcBefore,
                     success: function funcSuccess($json10) {
-                        for($i=0;$i<10;$i++)
-                            {
-                                document.querySelector('.demo').innerHTML += 'response: '+$json10.prec[$i] +'<br>';
-                            }
-                        
+                    document.querySelector('.data1').innerHTML += "";
                         //$json10 = JSON.parse($json10);
                         $L=$("#L").val();
                         $A=$("#A").val();
                         $Ip=$("#Ip").val();
+                        $Isk=$("#Isk").val();
+                        $l=$("#l").val();
                         $xp = +$json10.xp;
                         $x = +$json10.x;
                         $fi = +$json10.fi;
-                        $res=0;
+                        $nsk = +$json10.nsk;
+                        $fp = new Array ();
+                        $fsk = new Array ();
+                        
                         for($i=0;$i<10;$i++)
                         {
-                            $fp=(1000 * $L) / ( $xp * Math.pow($Ip,$x) * Math.pow($A,(1/4)) * Math.pow(($fi ), (1/4)));
+                            $fp[$i]=(1000 * $L) / ( $xp * $Ip * Math.pow($A,(1/4)) * Math.pow(($fi * $json10.prec[$i]), (1/4)));
+                            if ($fp[$i] == "Infinity")
+                                {
+                                    $fp[$i] = 0;
+                                }
                         }
-                        $("#information").val($fp);
-                        $("#information1").val($json10.prec);
-                        console.log($json10.prec[1]);
+                        
+                        document.querySelector('.data1').innerHTML += "Проміжні дані"+ '<br>' +"Для Фр" + '<br>' + "x = " + $x + '<br>' + "xp = " + $xp + '<br>' + "fi = " + $fi + '<br>' + "Для Фск" + '<br>' +"nsk = " + $nsk;
+                        
+                        /*for($i=0;$i<10;$i++)
+                        {
+                            $fsk[$i] = (Math.pow((1000 * $l), (0.5))) / ($nsk * Math.pow($Isk, (0.25)) *  Math.pow(($fi * $json10.prec[$i]), (0.5))) ;
+                            document.querySelector('.demo').innerHTML += 'response: '+$fsk[$i] +'<br>';
+                        }*/
+
+                        //$("#information").val($fp);
+                        
                     }
                     
             });
@@ -239,13 +255,19 @@
                <form action="">
                 <h2 class="text-center">Введіть дані</h2>
                 <label for="L">Довжина водозбору L (км)= </label>
-                <input type="text" name="L" id="L" size="10" value="272">
+                <input type="text" name="L" id="L" size="10" value="7">
                 <br>
                 <label for="A">Площа водозбору A (км²)= </label>
-                <input type="text" name="A" id="A" size="10" value="27.5">
+                <input type="text" name="A" id="A" size="10" value="20">
                 <br>
-                <label for="Ip">Середньозважений нахил водозбору Ip (‰)= </label>
-                <input type="text" name="Ip" id="Ip" size="10" value="0.3">
+                <label for="Ip">Середньозважений ухил схилів басейну Ip (‰)= </label>
+                <input type="text" name="Ip" id="Ip" size="10" value="11">
+                <br>
+                <label for="Isk">Середній ухил схилів басейну Isk (‰)= </label>
+                <input type="text" name="Isk" id="Isk" size="10" value="15">
+                <br>
+                <label for="l">Середня довжина схилів басейнів l (км)= </label>
+                <input type="text" name="l" id="l" size="10" value="8">
                 <br>
                 <p>Для визначення проміжних параметрів x та xp виберіть:</p>
                 <p>Характеристика русла і пойми</p>
@@ -257,27 +279,44 @@
                     while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['Characteristika'].'</option>'; }
                     mysql_free_result($result);
                     print'</select></td>';
-                ?>
-                <?php
-                    include "on.php"; 
+                
                     $query = "SELECT * FROM `tabl27`";
                     $result = mysql_query($query) or die(mysql_error());
                     print '<td><SELECT name="" id="_fi" required>';
                     while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['type'].'</option>'; }
                     mysql_free_result($result);
                     print'</select></td>';
+            
+                    $query = "SELECT * FROM `tabl26`";
+                    $result = mysql_query($query) or die(mysql_error());
+                    print '<td><SELECT name="" id="_nsk" required>';
+                    while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['character'].'</option>'; }
+                    mysql_free_result($result);
+                    print'</select></td>';
                 ?>
+                <select name="" id="_tp" required>
+                    <option disabled>Оберіть тип трав'яного покриву</option>
+                    <option value="1">Рідкісний або відсутній</option>
+                    <option value="2">Звичайний</option>
+                    <option value="3">Густий</option>
+                </select>
+                
+                <select name="" id="rajon" required><option>Оберіть район криких редукцій згідно карти</option>
+                    <option value="1">7, 8, 10, 29</option>
+                    <option value="2">5, 5a, 5в, 5г, 6, 6а, 14, 26, 33</option>
+                    <option value="3">3, 4, 9, 17, 27, 32</option>
+                    <option value="4">2, 12, 16, 24, 28, 30</option>
+                    <option value="5">1, 11, 18, 22, 31</option>
+                    <option value="6">13, 19, 23, 25, 34</option>
+                    <option value="7">5б, 15, 20, 21</option>
+                </select>
                 <input type="button" id="submit" value="Обчислити">
+                <p>Виберіть тривалість схилового добігання</p>
                 </form>
             </div>
             <div class="col-md-4">
                 <h2 class="text-center">Результат</h2>
-                <div>
-                <label>Фр = </label>
-                <input type="text" name="" id="information" size="10">
-                <br>
-                <input type="text" name="" id="information1" size="50">
-                </div>
+                <p class="data1"></p>
             </div>
             <div class="col-md-2">
                <p><b>Оберіть інтервал часу для розрахунку</b></p>
@@ -290,7 +329,6 @@
 </div>
 
 <div class="demo"></div>
-<!--<script src="ajax.js"></script>-->
 <script src="js/myscript.js"></script>
 </body>
 </html>
