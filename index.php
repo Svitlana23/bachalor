@@ -27,40 +27,44 @@
                     type:"GET",
                     dataType: "json",
                     data: {
+                        'L':$('#L').val(),
+                        'A':$("#A").val(),
+                        'Ip':$("#Ip").val(),
+                        'l':$("#l").val(),
                         'selectedValue': $('#x_xp').val(), 
                         'selectedValue1': $('#_fi').val(),
-                        'selectedValue2': $('#rajon').val(),
-                        'selectedValue3': $('#_tp').val(),
-                        'selectedValue4': $('#_nsk').val()  
+                        'selectedValue2': $('#rajon').text(),
+                        'selectedValue3': $('#_Tsk').text()
                     },
                     beforeSend: funcBefore,
                     success: function funcSuccess($json10) {
                     document.querySelector('.data1').innerHTML += "";
                         //$json10 = JSON.parse($json10);
-                        $L=$("#L").val();
-                        $A=$("#A").val();
-                        $Ip=$("#Ip").val();
-                        $Isk=$("#Isk").val();
-                        $l=$("#l").val();
-                        $xp = +$json10.xp;
-                        $x = +$json10.x;
-                        $fi = +$json10.fi;
-                        $nsk = +$json10.nsk;
-                        $fp = new Array ();
-                        $fsk = new Array ();
-                        
+                        $L= +$json10.L;
+                        $A= +$json10.A;
+                        $Ip= +$json10.Ip;
+                        $l= +$json10.l;
+                        var Fp = new Array ();
+                        var q1 = new Array ();
                         for($i=0;$i<10;$i++)
                         {
-                            $fp[$i]=(1000 * $L) / ( $xp * $Ip * Math.pow($A,(1/4)) * Math.pow(($fi * $json10.prec[$i]), (1/4)));
-                            if ($fp[$i] == "Infinity")
-                                {
-                                    $fp[$i] = 0;
-                                }
+                            Fp.push(parseFloat($json10.fp[$i]));
+                            q1.push(parseFloat($json10.q[$i]));
                         }
+                        console.log($L);
+                        console.log($A);
+                        console.log($Ip);
+                        console.log($l);
+                        for($i=0;$i<10;$i++)
+                            {
+                                console.log("Fp" + "[" + $i +"] = " + Fp[$i]);
+                                console.log("q" + "[" + $i +"] = " + q1[$i]);
+                            }
+                        /*
                         
                         document.querySelector('.data1').innerHTML += "Проміжні дані"+ '<br>' +"Для Фр" + '<br>' + "x = " + $x + '<br>' + "xp = " + $xp + '<br>' + "fi = " + $fi + '<br>' + "Для Фск" + '<br>' +"nsk = " + $nsk;
                         
-                        /*for($i=0;$i<10;$i++)
+                        for($i=0;$i<10;$i++)
                         {
                             $fsk[$i] = (Math.pow((1000 * $l), (0.5))) / ($nsk * Math.pow($Isk, (0.25)) *  Math.pow(($fi * $json10.prec[$i]), (0.5))) ;
                             document.querySelector('.demo').innerHTML += 'response: '+$fsk[$i] +'<br>';
@@ -252,7 +256,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-               <form action="">
+               <form action="" method="get">
                 <h2 class="text-center">Введіть дані</h2>
                 <label for="L">Довжина водозбору L (км)= </label>
                 <input type="text" name="L" id="L" size="10" value="7">
@@ -269,40 +273,44 @@
                 <label for="l">Середня довжина схилів басейнів l (км)= </label>
                 <input type="text" name="l" id="l" size="10" value="8">
                 <br>
-                <p>Для визначення проміжних параметрів x та xp виберіть:</p>
-                <p>Характеристика русла і пойми</p>
+                
                 <?php
                     include "on.php"; 
                     $query = "SELECT * FROM `tabl18`";
                     $result = mysql_query($query) or die(mysql_error());
-                    print '<td><SELECT name="" id="x_xp" required>';
+                    print '<td><SELECT name="" id="x_xp" required><option>Оберіть характеристику русла і заплави</option>';
                     while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['Characteristika'].'</option>'; }
                     mysql_free_result($result);
                     print'</select></td>';
                 
                     $query = "SELECT * FROM `tabl27`";
                     $result = mysql_query($query) or die(mysql_error());
-                    print '<td><SELECT name="" id="_fi" required>';
+                    print '<td><SELECT name="" id="_fi" required><option>Оберіть тип гірського району, типи грунтів</option>';
                     while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['type'].'</option>'; }
                     mysql_free_result($result);
                     print'</select></td>';
-            
-                    $query = "SELECT * FROM `tabl26`";
+                    
+                    $query = "SELECT * FROM `tabl21`";
                     $result = mysql_query($query) or die(mysql_error());
-                    print '<td><SELECT name="" id="_nsk" required>';
-                    while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['character'].'</option>'; }
-                    mysql_free_result($result);
-                    print'</select></td>';
+            
+//                    $query = "SELECT * FROM `tabl26`";
+//                    $result = mysql_query($query) or die(mysql_error());
+//                    print '<td><SELECT name="" id="_nsk" required>';
+//                    while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['character'].'</option>'; }
+//                    mysql_free_result($result);
+//                    print'</select></td>';
                 ?>
-                <select name="" id="_tp" required>
+<!--
+         <select name="" id="_tp" required>
                     <option disabled>Оберіть тип трав'яного покриву</option>
                     <option value="1">Рідкісний або відсутній</option>
                     <option value="2">Звичайний</option>
                     <option value="3">Густий</option>
                 </select>
-                
-                <select name="" id="rajon" required><option>Оберіть район криких редукцій згідно карти</option>
-                    <option value="1">7, 8, 10, 29</option>
+-->               
+                <select name="" id="rajon" required>
+                    <option>Оберіть район кривих редукцій згідно карти</option>
+                    <option value="1">7,8,10,29</option>
                     <option value="2">5, 5a, 5в, 5г, 6, 6а, 14, 26, 33</option>
                     <option value="3">3, 4, 9, 17, 27, 32</option>
                     <option value="4">2, 12, 16, 24, 28, 30</option>
@@ -310,8 +318,18 @@
                     <option value="6">13, 19, 23, 25, 34</option>
                     <option value="7">5б, 15, 20, 21</option>
                 </select>
+                
+                <select name="" id="_Tsk" required>
+                    <option>Оберіть тривалість схилового добігання</option>
+                    <option value="1">10</option>
+                    <option value="2">30</option>
+                    <option value="3">60</option>
+                    <option value="4">100</option>
+                    <option value="5">150</option>
+                    <option value="6">200</option>
+                </select>
+                <br>
                 <input type="button" id="submit" value="Обчислити">
-                <p>Виберіть тривалість схилового добігання</p>
                 </form>
             </div>
             <div class="col-md-4">
