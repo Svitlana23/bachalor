@@ -33,32 +33,51 @@
                         'l':$("#l").val(),
                         'selectedValue': $('#x_xp').val(), 
                         'selectedValue1': $('#_fi').val(),
-                        'selectedValue2': $('#rajon').text(),
-                        'selectedValue3': $('#_Tsk').text()
+                        'selectedValue2': $("#rajon :selected").text(),
+                        'selectedValue3': $("#_Tsk :selected").text(),
+                        'selectedValue4': $('#_Lambda').val(),
+                        'selectedValue5': $('#_p').val()
+                        
                     },
                     beforeSend: funcBefore,
                     success: function funcSuccess($json10) {
                     document.querySelector('.data1').innerHTML += "";
                         //$json10 = JSON.parse($json10);
-                        $L= +$json10.L;
-                        $A= +$json10.A;
-                        $Ip= +$json10.Ip;
-                        $l= +$json10.l;
+                        $L= "L = " +$json10.L;
+                        $A= "A = " +$json10.A;
+                        $Ip= "Ip = "+$json10.Ip;
+                        $l= "l = "+$json10.l;
+                        $b= "b = "+$json10.b;
+                        $p= "p = "+$json10.p;
+                        $r= "r = "+$json10.r;
+                        $fi= "fi = "+$json10.fi;
+                        $tsk= "tsk = "+$json10.tsk;
+                        
                         var Fp = new Array ();
-                        var q1 = new Array ();
+                        var q = new Array ();
+                        var Q = new Array ();
                         for($i=0;$i<10;$i++)
                         {
                             Fp.push(parseFloat($json10.fp[$i]));
-                            q1.push(parseFloat($json10.q[$i]));
+                            q.push(parseFloat($json10.q[$i]));
+                            Q.push(parseFloat($json10.Q[$i]));
                         }
                         console.log($L);
                         console.log($A);
                         console.log($Ip);
                         console.log($l);
+                        console.log($b);
+                        console.log($p);
+                        console.log($r);
+                        console.log($fi);
+                        console.log($tsk);
+                        //console.log("q = " + $json10.q);
+                        
                         for($i=0;$i<10;$i++)
                             {
                                 console.log("Fp" + "[" + $i +"] = " + Fp[$i]);
-                                console.log("q" + "[" + $i +"] = " + q1[$i]);
+                                console.log("q" + "[" + $i +"] = " + q[$i]);
+                                console.log("Q" + "[" + $i +"] = " + Q[$i]);
                             }
                         /*
                         
@@ -290,33 +309,30 @@
                     mysql_free_result($result);
                     print'</select></td>';
                     
-                    $query = "SELECT * FROM `tabl21`";
+                    $query = "SELECT * FROM `tabl20`";
                     $result = mysql_query($query) or die(mysql_error());
+                    print '<td><SELECT name="" id="_Lambda" required><option>Оберіть площу водозбору А (км²), середню висоту водозбору Н (м)</option>';
+                    while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[number].'">Район '.$row['raion']." Площа / висота ".$row['A_Hb'].'</option>'; }
+                    mysql_free_result($result);
+                    print'</select></td>';
             
-//                    $query = "SELECT * FROM `tabl26`";
-//                    $result = mysql_query($query) or die(mysql_error());
-//                    print '<td><SELECT name="" id="_nsk" required>';
-//                    while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['character'].'</option>'; }
-//                    mysql_free_result($result);
-//                    print'</select></td>';
                 ?>
-<!--
-         <select name="" id="_tp" required>
-                    <option disabled>Оберіть тип трав'яного покриву</option>
-                    <option value="1">Рідкісний або відсутній</option>
-                    <option value="2">Звичайний</option>
-                    <option value="3">Густий</option>
-                </select>
--->               
+
                 <select name="" id="rajon" required>
                     <option>Оберіть район кривих редукцій згідно карти</option>
                     <option value="1">7,8,10,29</option>
-                    <option value="2">5, 5a, 5в, 5г, 6, 6а, 14, 26, 33</option>
-                    <option value="3">3, 4, 9, 17, 27, 32</option>
-                    <option value="4">2, 12, 16, 24, 28, 30</option>
-                    <option value="5">1, 11, 18, 22, 31</option>
-                    <option value="6">13, 19, 23, 25, 34</option>
-                    <option value="7">5б, 15, 20, 21</option>
+                    <option value="2">5,6,14,26,33,5в</option>
+                    <option value="3">3,4,9,17,27,32</option>
+                    <option value="4">2,12,16,24,28,30</option>
+                    <option value="5">1,11,18,22, 31</option>
+                    <option value="6">13,19,23,25,34</option>
+                    <option value="7">15,20,21</option>
+                    <option value="8">5г (Закарпатська низовина)</option>
+                    <option value="9">5а (Північні схили Карпат)</option>
+                    <option value="10">5б (Північні схили Карпат)</option>
+                    <option value="11">6а (Північні схили Гірського Криму)</option>
+                    <option value="12">6а (Південні схили Гірського Криму)</option>
+                    <option value="13">6а (Керченський півострів)</option>
                 </select>
                 
                 <select name="" id="_Tsk" required>
@@ -327,6 +343,16 @@
                     <option value="4">100</option>
                     <option value="5">150</option>
                     <option value="6">200</option>
+                </select>
+                <select name="" id="_p" required>
+                    <option>Оберіть ймовірність перевищення Р%</option>
+                    <option value="1">0.1</option>
+                    <option value="2">1</option>
+                    <option value="3">2</option>
+                    <option value="4">3</option>
+                    <option value="5">5</option>
+                    <option value="6">10</option>
+                    <option value="7">25</option>
                 </select>
                 <br>
                 <input type="button" id="submit" value="Обчислити">
