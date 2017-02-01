@@ -55,3 +55,4 @@ $("input[name=send]").click(function () { // Событие нажатия на 
     $("input[name=h3]").val(res1); 
     $("input[name=V3]").val(res2);
 });
+

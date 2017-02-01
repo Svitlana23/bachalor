@@ -296,6 +296,45 @@ for($i=0;$i<10;$i++)
     $Q[$i]= $q[$i] * $fi * $prec[$i] * $b * $_lambda * $A;
 }
 
+
+ # Сколько раз записать (получаем из POST)
+  //  $count = (int) $_POST('count');
+    $list_f = mysql_list_fields(river_flooding,data_Q); 
+        // отримуємо список полів в базі
+    $n = mysql_num_fields($list_f);
+    # Начинаем формировать sql запрос
+    $sql = "INSERT INTO `data_Q` (`id`,`Q`) VALUES";
+    
+    # Формируем sql запрос
+    for($i=0; $i<10; $i++)
+        $sql .= "('$i','$Q[$i]'),";
+        
+    # Отрезаем лишнюю запятую
+    $sql = rtrim( $sql, ',' );
+    
+    # Выполняем запрос
+    $result2 = mysql_query ( $sql );
+
+/*
+$list_f = mysql_list_fields(river_flooding,data_Q); 
+        // отримуємо список полів в базі
+
+//$n = mysql_num_fields($list_f); 
+// кількість стрічок в результаті попереднього запиту
+$sql = "INSERT INTO data_Q SET "; // починаємо створювати запит, перебираємо всі поля таблиці
+for($i=0;$i<10;$i++)
+{
+    $name_f = mysql_field_name ($list_f,$i); // визначаємо ім’я поля
+    $value = $_POST[$name_f]; // обчислюємо значення поля
+        $j = $i + 1;
+        $sql = $sql . $name_f." = '$value'";  
+        // дописуємо в стрічку $sql пару ім’я=значення
+        if ($j <> $n) $sql = $sql . ", ";  
+        // якщо поле не останнєв списку, то ставимо кому
+}
+$result = mysql_query($sql,$conn); // відправляємо запит 
+*/
+
 $json10 = json_encode(['L' => $L, 'A' => $A, 'Ip' => $Ip, 'l' => $l, 'fp' => $fp, 'b' => $b, 'p' => $p, 'r' => $_rajon, 'fi' => $fi, 'tsk' => $_tsk, 'q' => $q, 'Q' => $Q]);
 echo $json10;
 mysql_close($link);

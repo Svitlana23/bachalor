@@ -36,12 +36,13 @@
                         'selectedValue2': $("#rajon :selected").text(),
                         'selectedValue3': $("#_Tsk :selected").text(),
                         'selectedValue4': $('#_Lambda').val(),
-                        'selectedValue5': $('#_p').val()
-                        
+                        'selectedValue5': $('#_p').val(),
+                        'selectedValue6': $('#begin').val,
+                        'selectedValue7': $('#end').val
                     },
                     beforeSend: funcBefore,
                     success: function funcSuccess($json10) {
-                    document.querySelector('.data1').innerHTML += "";
+                    //document.querySelector('.data1').innerHTML += "";
                         //$json10 = JSON.parse($json10);
                         $L= "L = " +$json10.L;
                         $A= "A = " +$json10.A;
@@ -71,7 +72,8 @@
                         console.log($r);
                         console.log($fi);
                         console.log($tsk);
-                        //console.log("q = " + $json10.q);
+                      /*  console.log("begin"+$json10.end);
+                        console.log("end"+$json10.end);*/
                         
                         for($i=0;$i<10;$i++)
                             {
@@ -79,20 +81,29 @@
                                 console.log("q" + "[" + $i +"] = " + q[$i]);
                                 console.log("Q" + "[" + $i +"] = " + Q[$i]);
                             }
-                        /*
-                        
-                        document.querySelector('.data1').innerHTML += "Проміжні дані"+ '<br>' +"Для Фр" + '<br>' + "x = " + $x + '<br>' + "xp = " + $xp + '<br>' + "fi = " + $fi + '<br>' + "Для Фск" + '<br>' +"nsk = " + $nsk;
-                        
-                        for($i=0;$i<10;$i++)
-                        {
-                            $fsk[$i] = (Math.pow((1000 * $l), (0.5))) / ($nsk * Math.pow($Isk, (0.25)) *  Math.pow(($fi * $json10.prec[$i]), (0.5))) ;
-                            document.querySelector('.demo').innerHTML += 'response: '+$fsk[$i] +'<br>';
-                        }*/
-
-                        //$("#information").val($fp);
                         
                     }
                     
+            });
+            });
+        });
+        
+        $(function () {
+            $("#submit1").bind("click", function (e){
+                e.preventDefault();
+                $.ajax({
+                    method:'get',
+                    url:"data_weather.php",
+                    type:"GET",
+                    dataType: "json",
+                    data: {
+                        'begin': $('#begin').val(),
+                        'end': $('#end').val()
+                    },
+                    success: function funcS($json11){
+                        
+                        console.log("id = " +$json11.a);
+                    }    
             });
             });
         });
@@ -166,108 +177,12 @@
 						</form>
     </div>
 
-    
-<div>
-    
-    <div>
-        <form action="script_weather.php">
-            <button>Ввести дані погоди в БД</button>
-        </form>
-    </div>
-</div>
-
-<div>
-    <div id="container">
-        </div>
-</div>
-
-<div>
-    <?php
-    include "on.php";
-    $data = array();
-    $query="SELECT date,temp,hum,wind,prec FROM `weather`";
-    $res = mysql_query($query);
-    while ($row = mysql_fetch_array($res))
-    {
-        $data[]=array($row['date']);
-        $temperature[]=array((int)$row['temp']);
-        $hum[]=array((int)$row['hum']);
-        $wind[]=array((int)$row['wind']);
-        $prec[]=array((int)$row['prec']);
-    }
-    $json1 = json_encode($data);
-    $json2 = json_encode($temperature);
-    $json3 = json_encode($hum);
-    $json4 = json_encode($wind);
-    $json5 = json_encode($prec);
-    mysql_close($link);
-?>
-
-<script type="text/javascript">    
-    $(function () {
-    $('#container').highcharts({
-        title: {
-            text: 'Погодні показники',
-            x: -20 //center
-        },
-        subtitle: {
-            text: 'Source:sinoptik.ua',
-            x: -20
-        },
-        xAxis: {
-            title:{
-                text:'Дата'
-            },
-            type: 'date',
-            categories: <?=$json1?>
-        },
-        yAxis: {
-            title: {
-                text: 'Temperature (°C)'
-            },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }]
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-            borderWidth: 0
-        },
-        series: [{
-            name: 'Температура',
-            data: <?=$json2?>,
-            tooltip: {
-            valueSuffix: '°C'
-        }
-        },
-            {
-            name: 'Вологість',
-            data: <?=$json3?>,
-            tooltip: {
-            valueSuffix: '%'
-        }
-        },
-                {
-            name: 'Вітер',
-            data: <?=$json4?>,
-            tooltip: {
-            valueSuffix: 'м/с'
-        }
-        },
-                {
-            name: 'Осадки',
-            data: <?=$json5?>,
-            tooltip: {
-            valueSuffix: '%'
-        }
-        }]
-    });
-});
-</script>
+<div class="text-center">
+    <form action="" method="get">
+    Від <input type="date" id="begin" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+    До <input type="date" id="end" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+    <input type="button" id="submit1" value="Вибрати інтервал часу">
+    </form>
 </div>
 
 <div>
@@ -292,12 +207,11 @@
                 <label for="l">Середня довжина схилів басейнів l (км)= </label>
                 <input type="text" name="l" id="l" size="10" value="8">
                 <br>
-                
                 <?php
                     include "on.php"; 
                     $query = "SELECT * FROM `tabl18`";
                     $result = mysql_query($query) or die(mysql_error());
-                    print '<td><SELECT name="" id="x_xp" required><option>Оберіть характеристику русла і заплави</option>';
+                    print '<td><SELECT name="" id="x_xp"  required><option>Оберіть характеристику русла і заплави</option>';
                     while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['Characteristika'].'</option>'; }
                     mysql_free_result($result);
                     print'</select></td>';
@@ -359,19 +273,88 @@
                 </form>
             </div>
             <div class="col-md-4">
-                <h2 class="text-center">Результат</h2>
-                <p class="data1"></p>
+                
             </div>
+            
             <div class="col-md-2">
-               <p><b>Оберіть інтервал часу для розрахунку</b></p>
-                Діапазон днів<br>
-                    Від <input type="date" name="begin" min="2000-01-01" max="2020-12-12" value="2016-10-28">
-                    До <input type="date" name="end" min="2000-01-01" max="2020-12-12" value="2016-10-28">
+               
             </div>
         </div>
     </div>
 </div>
 
+
+<div>
+    <div id="container2"></div>
+</div>
+<div>
+            <?php
+                include "on.php";
+                $Q = array();
+                $query="SELECT Q FROM `data_Q`";
+                $res = mysql_query($query);
+                while ($row = mysql_fetch_array($res))
+                {
+                    $Q[]=array((double)$row['Q']);
+                }
+                $query="SELECT date FROM `weather`";
+                $res = mysql_query($query);
+                while ($row = mysql_fetch_array($res))
+                {
+                    $data[]=array($row['date']);
+                }
+                $json6 = json_encode($Q);
+                $json7 = json_encode($data);
+                mysql_close($link);
+            ?>
+
+                <script type="text/javascript">    
+                    $(function () {
+                    $('#container2').highcharts({
+                        title: {
+                            text: 'МАКСИМАЛЬНИЙ СТОК ВОДИ РІЧОК ДОЩОВИХ ПАВОДКІВ',
+                            x: -20 //center
+                        },
+                        subtitle: {
+                        text: 'Source:sinoptik.ua',
+                        x: -20
+                    },
+                        xAxis: {
+                            title:{
+                                text:'Дата'
+                            },
+                            type: 'date',
+                            categories: <?=$json7?>
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Qр%'
+                            },
+                            plotLines: [{
+                                value: 0,
+                                width: 1,
+                                color: '#808080'
+                            }]
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'middle',
+                            borderWidth: 0
+                        },
+                        series: [{
+                            name: 'Qр%',
+                            data: <?=$json6?>,
+                            tooltip: {
+                            valueSuffix: '°C'
+                        }
+                        }]
+                    });
+                });
+</script>
+
+           </div>
+           
 <div class="demo"></div>
 <script src="js/myscript.js"></script>
 </body>
