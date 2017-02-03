@@ -18,23 +18,29 @@ $arrayOfDates = array_map(
 //print_r($arrayOfDates);
 
 include 'simple_html_dom.php';
-$query="SELECT date FROM weather";
-$result = mysql_query($query);
-while ($row = mysql_fetch_array($result))
-{
-    $date[]=$row['date'];
-}
+
+
+
+    $query1 = mysql_query("SELECT MAX(id) FROM weather");  
+    $max_id = mysql_result($query1, 0);
 
 for($i=0; $i<$day; $i++)
 {
+  /*  $query="SELECT date FROM weather WHERE date='$arrayOfDates[$i]'";
+    $result = mysql_query($query[$i]);
+    while ($row = mysql_fetch_array($result))
+    {
+        $date[]=$row['date'];
+    }
+    */
     $html=file_get_html('https://sinoptik.ua/погода-черновцы/'.$arrayOfDates[$i]);
+    
     if($html->find('td.p5'))
     {
         $temperature = $html->find('td.p5',2)->innertext;
         $humidity= $html->find('td.p5',5)->innertext;
         $precipitation = $html->find('td.p5',7)->innertext;  
     }
-    
     else
     {
         $temperature = $html->find('td.p3',2)->innertext;
@@ -46,26 +52,31 @@ for($i=0; $i<$day; $i++)
     {
         $precipitation=0;
     }
-//    $query="SELECT date FROM weather WHERE date='$arrayOfDates[$i]'"
-//    $row=mysql_query($query);
-//    if(!row)
-//    {
-//        $query1 = mysql_query("SELECT MAX(id) FROM weather");  
-//        $max_id = mysql_result($query1, 0);
-        $date=$arrayOfDates[$i];
-        $id = $id+1;  
-  
-    $query="INSERT INTO weather VALUES ('$id','$temperature','$humidity','$precipitation','$date')";
-    mysql_query($query);
     
+  /*  $query="SELECT date FROM weather WHERE date='$arrayOfDates[$i]'";
+    $row=mysql_query($query);
+   
+    if(!row)
+    {
+        $query1 = mysql_query("SELECT MAX(id) FROM weather");  
+        $max_id = mysql_result($query1, 0);
+    */
+        $date=$arrayOfDates[$i];
+        $id = $i+1;  
+  
+    $query="INSERT  INTO weather VALUES ('$id','$temperature','$humidity','$precipitation','$date')";
+        mysql_query($query);
+   /* }
+    else {
+        echo "Запис існує!";
+    } */
     
 }
-    /*$query1 = mysql_query("SELECT MAX(id) FROM weather");  
-    $max_id = mysql_result($query1, 0);*/
+    
    
 
  
-/*$json11=json_encode([]);
+/*$json11=json_encode(['id'=>$max_id, 'date'=>$date]);
 echo $json11;*/
 mysql_close($link);
 ?>

@@ -14,6 +14,9 @@ $Ip = $_GET['Ip'];
 $l = $_GET['l'];
 $b=1;
 
+$query = mysql_query("SELECT MAX(id) FROM weather");  
+$n = mysql_result($query, 0);
+
 $query = "SELECT x, xp FROM tabl18 WHERE id=$x_xp";
 $result = mysql_query($query);
 while ($row = mysql_fetch_array($result))
@@ -36,7 +39,7 @@ while ($row = mysql_fetch_array($result))
     $prec[]=$row['prec'];
 }
 
-for($i=0;$i<10;$i++)
+for($i=0;$i<$n;$i++)
 {
     $fp[$i]=(1000 * $L) / ( $xp * $Ip * pow($A,(1/4)) * pow(($fi * $prec[$i]), (1/4)));
     /*if ($fp[$i] == "Infinity")
@@ -117,7 +120,7 @@ if($_p == 7)
 
 
 
-for($i=0;$i<10;$i++)
+for($i=0;$i<$n;$i++)
 {
     if(($fp[$i] == 0))
    {
@@ -291,23 +294,28 @@ for($i=0;$i<10;$i++)
     
 }
 
-for($i=0;$i<10;$i++)
+for($i=0;$i<$n;$i++)
 {
     $Q[$i]= $q[$i] * $fi * $prec[$i] * $b * $_lambda * $A;
 }
 
+$query = "SELECT date FROM weather";
+$result = mysql_query($query);
+while ($row = mysql_fetch_array($result))
+{
+    $date[]=$row['date'];
+}
 
- # Сколько раз записать (получаем из POST)
-  //  $count = (int) $_POST('count');
-    $list_f = mysql_list_fields(river_flooding,data_Q); 
-        // отримуємо список полів в базі
-    $n = mysql_num_fields($list_f);
     # Начинаем формировать sql запрос
-    $sql = "INSERT INTO `data_Q` (`id`,`Q`) VALUES";
+    $sql = "INSERT INTO `data_Q` (`id`,`Q`,`date`) VALUES";
     
     # Формируем sql запрос
-    for($i=0; $i<10; $i++)
-        $sql .= "('$i','$Q[$i]'),";
+    for($i=0; $i<$n; $i++)
+    {
+        $id=$i+1;
+        $sql .= "('$id','$Q[$i]','$date[$i]'),";
+    }
+        
         
     # Отрезаем лишнюю запятую
     $sql = rtrim( $sql, ',' );
@@ -315,25 +323,6 @@ for($i=0;$i<10;$i++)
     # Выполняем запрос
     $result2 = mysql_query ( $sql );
 
-/*
-$list_f = mysql_list_fields(river_flooding,data_Q); 
-        // отримуємо список полів в базі
-
-//$n = mysql_num_fields($list_f); 
-// кількість стрічок в результаті попереднього запиту
-$sql = "INSERT INTO data_Q SET "; // починаємо створювати запит, перебираємо всі поля таблиці
-for($i=0;$i<10;$i++)
-{
-    $name_f = mysql_field_name ($list_f,$i); // визначаємо ім’я поля
-    $value = $_POST[$name_f]; // обчислюємо значення поля
-        $j = $i + 1;
-        $sql = $sql . $name_f." = '$value'";  
-        // дописуємо в стрічку $sql пару ім’я=значення
-        if ($j <> $n) $sql = $sql . ", ";  
-        // якщо поле не останнєв списку, то ставимо кому
-}
-$result = mysql_query($sql,$conn); // відправляємо запит 
-*/
 
 $json10 = json_encode(['L' => $L, 'A' => $A, 'Ip' => $Ip, 'l' => $l, 'fp' => $fp, 'b' => $b, 'p' => $p, 'r' => $_rajon, 'fi' => $fi, 'tsk' => $_tsk, 'q' => $q, 'Q' => $Q]);
 echo $json10;

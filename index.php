@@ -8,11 +8,9 @@
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
     <script src="js/jquery-latest.js"></script>
     <script src="js/bootstrap.min.js"></script>
-<!--    <script src="js/jquery.tooltip.min.js"></script>-->
-   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
-<!--    <script src="ajax.js"></script>-->
     <script>
         function funcBefore(){
             $("#information").text("Очікування даних");
@@ -36,9 +34,7 @@
                         'selectedValue2': $("#rajon :selected").text(),
                         'selectedValue3': $("#_Tsk :selected").text(),
                         'selectedValue4': $('#_Lambda').val(),
-                        'selectedValue5': $('#_p').val(),
-                        'selectedValue6': $('#begin').val,
-                        'selectedValue7': $('#end').val
+                        'selectedValue5': $('#_p').val()
                     },
                     beforeSend: funcBefore,
                     success: function funcSuccess($json10) {
@@ -72,8 +68,6 @@
                         console.log($r);
                         console.log($fi);
                         console.log($tsk);
-                      /*  console.log("begin"+$json10.end);
-                        console.log("end"+$json10.end);*/
                         
                         for($i=0;$i<10;$i++)
                             {
@@ -81,9 +75,7 @@
                                 console.log("q" + "[" + $i +"] = " + q[$i]);
                                 console.log("Q" + "[" + $i +"] = " + Q[$i]);
                             }
-                        
                     }
-                    
             });
             });
         });
@@ -101,8 +93,62 @@
                         'end': $('#end').val()
                     },
                     success: function funcS($json11){
-                        
-                        console.log("id = " +$json11.a);
+//                        console.log("id = "+$json11.id);
+//                        console.log("date= "+$json11.date);
+                    }    
+            });
+            });
+        });
+        
+        $(function () {
+            $("#chart").bind("click", function (e){
+                e.preventDefault();
+                $.ajax({
+                    method:'get',
+                    url:"chart.php",
+                    type:"GET",
+                    dataType: "json",
+                    success: function funcChart($json6){
+                        $('#container2').highcharts({
+                        title: {
+                            text: 'МАКСИМАЛЬНИЙ СТОК ВОДИ РІЧОК ДОЩОВИХ ПАВОДКІВ',
+                            x: -20 //center
+                        },
+                        subtitle: {
+                        text: 'Source:sinoptik.ua',
+                        x: -20
+                    },
+                        xAxis: {
+                            title:{
+                                text:'Дата'
+                            },
+                            type: 'date',
+                            categories: $json6.data
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Qр%'
+                            },
+                            plotLines: [{
+                                value: 0,
+                                width: 1,
+                                color: '#808080'
+                            }]
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'middle',
+                            borderWidth: 0
+                        },
+                        series: [{
+                            name: 'Qр%',
+                            data: $json6.Q,
+                            tooltip: {
+                            valueSuffix: '°C'
+                        }
+                        }]
+                    });
                     }    
             });
             });
@@ -179,8 +225,8 @@
 
 <div class="text-center">
     <form action="" method="get">
-    Від <input type="date" id="begin" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
-    До <input type="date" id="end" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+        <input type="date" id="begin" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+        <input type="date" id="end" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
     <input type="button" id="submit1" value="Вибрати інтервал часу">
     </form>
 </div>
@@ -229,7 +275,6 @@
                     while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[number].'">Район '.$row['raion']." Площа / висота ".$row['A_Hb'].'</option>'; }
                     mysql_free_result($result);
                     print'</select></td>';
-            
                 ?>
 
                 <select name="" id="rajon" required>
@@ -270,6 +315,7 @@
                 </select>
                 <br>
                 <input type="button" id="submit" value="Обчислити">
+                <input type="button" id="chart" onclick="location.href='#container2'"  value="Отримати результат у вигляді графіка">
                 </form>
             </div>
             <div class="col-md-4">
@@ -285,77 +331,9 @@
 
 
 <div>
-    <div id="container2"></div>
+    <div id="container2">
+    </div>
 </div>
-<div>
-            <?php
-                include "on.php";
-                $Q = array();
-                $query="SELECT Q FROM `data_Q`";
-                $res = mysql_query($query);
-                while ($row = mysql_fetch_array($res))
-                {
-                    $Q[]=array((double)$row['Q']);
-                }
-                $query="SELECT date FROM `weather`";
-                $res = mysql_query($query);
-                while ($row = mysql_fetch_array($res))
-                {
-                    $data[]=array($row['date']);
-                }
-                $json6 = json_encode($Q);
-                $json7 = json_encode($data);
-                mysql_close($link);
-            ?>
-
-                <script type="text/javascript">    
-                    $(function () {
-                    $('#container2').highcharts({
-                        title: {
-                            text: 'МАКСИМАЛЬНИЙ СТОК ВОДИ РІЧОК ДОЩОВИХ ПАВОДКІВ',
-                            x: -20 //center
-                        },
-                        subtitle: {
-                        text: 'Source:sinoptik.ua',
-                        x: -20
-                    },
-                        xAxis: {
-                            title:{
-                                text:'Дата'
-                            },
-                            type: 'date',
-                            categories: <?=$json7?>
-                        },
-                        yAxis: {
-                            title: {
-                                text: 'Qр%'
-                            },
-                            plotLines: [{
-                                value: 0,
-                                width: 1,
-                                color: '#808080'
-                            }]
-                        },
-                        legend: {
-                            layout: 'vertical',
-                            align: 'right',
-                            verticalAlign: 'middle',
-                            borderWidth: 0
-                        },
-                        series: [{
-                            name: 'Qр%',
-                            data: <?=$json6?>,
-                            tooltip: {
-                            valueSuffix: '°C'
-                        }
-                        }]
-                    });
-                });
-</script>
-
-           </div>
-           
-<div class="demo"></div>
 <script src="js/myscript.js"></script>
 </body>
 </html>
