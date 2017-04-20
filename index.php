@@ -1,3 +1,7 @@
+<?php
+    include_once('func.php');
+    redirectAUTH();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,11 +10,13 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/ct-select-box.min.css">
     <script src="js/jquery-latest.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script src="js/highcharts.js"></script>
+    <script src="js/exporting.js"></script>
+    <script src="js/ct-select-box.min.js"></script>
     <script>
         function funcBefore(){
             $("#information").text("Очікування даних");
@@ -29,12 +35,12 @@
                         'A':$("#A").val(),
                         'Ip':$("#Ip").val(),
                         'l':$("#l").val(),
-                        'selectedValue': $('#x_xp').val(), 
-                        'selectedValue1': $('#_fi').val(),
-                        'selectedValue2': $("#rajon :selected").text(),
-                        'selectedValue3': $("#_Tsk :selected").text(),
-                        'selectedValue4': $('#_Lambda').val(),
-                        'selectedValue5': $('#_p').val()
+                        'selectedValue': $('#x_xp').get(0).value, 
+                        'selectedValue1': $('#_fi').get(0).value,
+                        'selectedValue2': $("#rajon").get(0).text,
+                        'selectedValue3': $("#_Tsk").get(0).text,
+                        'selectedValue4': $('#_Lambda').get(0).value,
+                        'selectedValue5': $('#_p').get(0).value
                     },
                     beforeSend: funcBefore,
                     success: function funcSuccess($json10) {
@@ -109,13 +115,14 @@
                     type:"GET",
                     dataType: "json",
                     success: function funcChart($json6){
+                        console.log($json6);
                         $('#container2').highcharts({
                         title: {
                             text: 'МАКСИМАЛЬНИЙ СТОК ВОДИ РІЧОК ДОЩОВИХ ПАВОДКІВ',
                             x: -20 //center
                         },
                         subtitle: {
-                        text: 'Source:sinoptik.ua',
+                        text: 'kbkbbkj',
                         x: -20
                     },
                         xAxis: {
@@ -145,7 +152,7 @@
                             name: 'Qр%',
                             data: $json6.Q,
                             tooltip: {
-                            valueSuffix: '°C'
+                            valueSuffix: 'мм'
                         }
                         }]
                     });
@@ -156,7 +163,7 @@
     </script>
 </head>
 <body class="bod">
-
+<a href="logout.php">Вихід</a>
 	<div>
 		<h1 class="text-center">
 			Розрахунок глибини затоплення
@@ -257,62 +264,72 @@
                     include "on.php"; 
                     $query = "SELECT * FROM `tabl18`";
                     $result = mysql_query($query) or die(mysql_error());
-                    print '<td><SELECT name="" id="x_xp"  required><option>Оберіть характеристику русла і заплави</option>';
-                    while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['Characteristika'].'</option>'; }
+                    print '<select-box id="x_xp"  required placeholder="Оберіть характеристику русла і заплави">';
+                    print '<select-box-header></select-box-header><select-box-content>';
+                    while ($row = mysql_fetch_array($result)) { print '<select-box-option value="'.$row['id'].'">'.$row['Characteristika'].'</select-box-option>'; }
                     mysql_free_result($result);
-                    print'</select></td>';
-                
+                    print '</select-box-content></select-box>';
+                   
                     $query = "SELECT * FROM `tabl27`";
                     $result = mysql_query($query) or die(mysql_error());
-                    print '<td><SELECT name="" id="_fi" required><option>Оберіть тип гірського району, типи грунтів</option>';
-                    while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[id].'">'.$row['type'].'</option>'; }
+                    print '<select-box id="_fi"  required placeholder="Оберіть тип гірського району, типи грунтів">';
+                    print '<select-box-header></select-box-header><select-box-content>';
+                    while ($row = mysql_fetch_array($result)) { print '<select-box-option value="'.$row['id'].'">'.$row['type'].'</select-box-option>'; }
                     mysql_free_result($result);
-                    print'</select></td>';
+                    print '</select-box-content></select-box>';
                     
                     $query = "SELECT * FROM `tabl20`";
                     $result = mysql_query($query) or die(mysql_error());
-                    print '<td><SELECT name="" id="_Lambda" required><option>Оберіть площу водозбору А (км²), середню висоту водозбору Н (м)</option>';
-                    while ($row = mysql_fetch_array($result)) { print '<option value="'.$row[number].'">Район '.$row['raion']." Площа / висота ".$row['A_Hb'].'</option>'; }
+                    print '<select-box id="_Lambda"  required placeholder="Оберіть площу водозбору А (км²), середню висоту водозбору Н (м)">';
+                    print '<select-box-header></select-box-header><select-box-content>';
+                    while ($row = mysql_fetch_array($result)) { print '<select-box-option value="'.$row['number'].'">Район '.$row['raion']." Площа / висота ".$row['A_Hb'].'</select-box-option>'; }
                     mysql_free_result($result);
-                    print'</select></td>';
+                    print '</select-box-content></select-box>';
                 ?>
 
-                <select name="" id="rajon" required>
-                    <option>Оберіть район кривих редукцій згідно карти</option>
-                    <option value="1">7,8,10,29</option>
-                    <option value="2">5,6,14,26,33,5в</option>
-                    <option value="3">3,4,9,17,27,32</option>
-                    <option value="4">2,12,16,24,28,30</option>
-                    <option value="5">1,11,18,22, 31</option>
-                    <option value="6">13,19,23,25,34</option>
-                    <option value="7">15,20,21</option>
-                    <option value="8">5г (Закарпатська низовина)</option>
-                    <option value="9">5а (Північні схили Карпат)</option>
-                    <option value="10">5б (Північні схили Карпат)</option>
-                    <option value="11">6а (Північні схили Гірського Криму)</option>
-                    <option value="12">6а (Південні схили Гірського Криму)</option>
-                    <option value="13">6а (Керченський півострів)</option>
-                </select>
+                <select-box id="rajon" required placeholder="Оберіть район кривих редукцій згідно карти">
+                    <select-box-header></select-box-header>
+                    <select-box-content>
+                        <select-box-option value="1">7,8,10,29</select-box-option>
+                        <select-box-option value="2">5,6,14,26,33,5в</select-box-option>
+                        <select-box-option value="3">3,4,9,17,27,32</select-box-option>
+                        <select-box-option value="4">2,12,16,24,28,30</select-box-option>
+                        <select-box-option value="5">1,11,18,22, 31</select-box-option>
+                        <select-box-option value="6">13,19,23,25,34</select-box-option>
+                        <select-box-option value="7">15,20,21</select-box-option>
+                        <select-box-option value="8">5г (Закарпатська низовина)</select-box-option>
+                        <select-box-option value="9">5а (Північні схили Карпат)</select-box-option>
+                        <select-box-option value="10">5б (Північні схили Карпат)</select-box-option>
+                        <select-box-option value="11">6а (Північні схили Гірського Криму)</select-box-option>
+                        <select-box-option value="12">6а (Південні схили Гірського Криму)</select-box-option>
+                        <select-box-option value="13">6а (Керченський півострів)</select-box-option>
+                </select-box-content>
+                </select-box>
                 
-                <select name="" id="_Tsk" required>
-                    <option>Оберіть тривалість схилового добігання</option>
-                    <option value="1">10</option>
-                    <option value="2">30</option>
-                    <option value="3">60</option>
-                    <option value="4">100</option>
-                    <option value="5">150</option>
-                    <option value="6">200</option>
-                </select>
-                <select name="" id="_p" required>
-                    <option>Оберіть ймовірність перевищення Р%</option>
-                    <option value="1">0.1</option>
-                    <option value="2">1</option>
-                    <option value="3">2</option>
-                    <option value="4">3</option>
-                    <option value="5">5</option>
-                    <option value="6">10</option>
-                    <option value="7">25</option>
-                </select>
+                <select-box id="_Tsk" required placeholder="Оберіть тривалість схилового добігання">
+                    <select-box-header></select-box-header>
+                    <select-box-content>
+                        <select-box-option value="1">10</select-box-option>
+                        <select-box-option value="2">30</select-box-option>
+                        <select-box-option value="3">60</select-box-option>
+                        <select-box-option value="4">100</select-box-option>
+                        <select-box-option value="5">150</select-box-option>
+                        <select-box-option value="6">200</select-box-option>
+                </select-box-content>
+                </select-box>
+                
+                <select-box id="_p" required placeholder="Оберіть ймовірність перевищення Р%">
+                    <select-box-header></select-box-header>
+                    <select-box-content>
+                        <select-box-option value="1">0.1</select-box-option>
+                        <select-box-option value="2">1</select-box-option>
+                        <select-box-option value="3">2</select-box-option>
+                        <select-box-option value="4">3</select-box-option>
+                        <select-box-option value="5">5</select-box-option>
+                        <select-box-option value="6">10</select-box-option>
+                        <select-box-option value="7">25</select-box-option>
+                </select-box-content>
+                </select-box>
                 <br>
                 <input type="button" id="submit" value="Обчислити">
                 <input type="button" id="chart" onclick="location.href='#container2'"  value="Отримати результат у вигляді графіка">

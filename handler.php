@@ -1,4 +1,8 @@
 <?php
+//витягти з сесії ід користувача
+include_once('func.php');
+authCheck();
+$user_id=$_SESSION['user_id'];
 include "on.php";
 
 $x_xp = $_GET['selectedValue'];
@@ -14,8 +18,8 @@ $Ip = $_GET['Ip'];
 $l = $_GET['l'];
 $b=1;
 
-$query = mysql_query("SELECT MAX(id) FROM weather");  
-$n = mysql_result($query, 0);
+//$query = mysql_query("SELECT MAX(id) FROM weather");  
+//$n = mysql_result($query, 0);
 
 $query = "SELECT x, xp FROM tabl18 WHERE id=$x_xp";
 $result = mysql_query($query);
@@ -32,20 +36,20 @@ while ($row = mysql_fetch_array($result))
     $fi=$row['fi'];
 }
 
-$query = "SELECT prec FROM weather";
+$query = "SELECT weather FROM `data_q` WHERE id_user = '$user_id' ORDER BY id_inform DESC";//сортувати за спаданням і взяти перший запис
 $result = mysql_query($query);
-while ($row = mysql_fetch_array($result))
+if(mysql_num_rows($result) == 0)
 {
-    $prec[]=$row['prec'];
+    echo "<script>alert(\"ЗАПИСУ НЕМАЄ!\");</script>";
 }
+$row = mysql_fetch_array($result);
+$prec = $row['weather'];
+$prec = json_decode($prec,true);
 
+$n = count($prec);
 for($i=0;$i<$n;$i++)
 {
     $fp[$i]=(1000 * $L) / ( $xp * $Ip * pow($A,(1/4)) * pow(($fi * $prec[$i]), (1/4)));
-    /*if ($fp[$i] == "Infinity")
-    {
-         $fp[$i] = 0;
-    }*/
 }
 
 if($_p == 1)
@@ -296,35 +300,37 @@ for($i=0;$i<$n;$i++)
 
 for($i=0;$i<$n;$i++)
 {
-    $Q[$i]= $q[$i] * $fi * $prec[$i] * $b * $_lambda * $A;
+    $data_Q[$i]= $q[$i] * $fi * $prec[$i] * $b * $_lambda * $A;
 }
 
-$query = "SELECT date FROM weather";
+
+/*
+$query = "SELECT weather FROM `data_q` WHERE id_user = '$user_id' ORDER BY id_inform DESC";//сортувати за спаданням і взяти перший запис
 $result = mysql_query($query);
-while ($row = mysql_fetch_array($result))
+if(mysql_num_rows($result) == 0)
 {
-    $date[]=$row['date'];
+    echo "<script>alert(\"ЗАПИСУ НЕМАЄ!\");</script>";
 }
+$row = mysql_fetch_array($result);
+$prec = $row['weather'];
+$prec = json_decode($prec,true);
+*/
 
-    # Начинаем формировать sql запрос
-    $sql = "INSERT INTO `data_Q` (`id`,`Q`,`date`) VALUES";
+    $Q = json_encode($data_Q);
+    $result = mysql_query("SELECT id_inform FROM `data_q` WHERE id_user = '$user_id' ORDER BY id_inform DESC");
     
-    # Формируем sql запрос
-    for($i=0; $i<$n; $i++)
-    {
-        $id=$i+1;
-        $sql .= "('$id','$Q[$i]','$date[$i]'),";
-    }
-        
-        
-    # Отрезаем лишнюю запятую
-    $sql = rtrim( $sql, ',' );
+    if(mysql_num_rows($result) == 0)
+            {
+               exit(); 
+            }
     
-    # Выполняем запрос
-    $result2 = mysql_query ( $sql );
+    $row = mysql_fetch_array($result);
+    $id = $row['id_inform'];
+    $sql_in="UPDATE `data_q` SET Q = '$Q' WHERE id_inform = '$id'";
+    mysql_query($sql_in);
 
 
-$json10 = json_encode(['L' => $L, 'A' => $A, 'Ip' => $Ip, 'l' => $l, 'fp' => $fp, 'b' => $b, 'p' => $p, 'r' => $_rajon, 'fi' => $fi, 'tsk' => $_tsk, 'q' => $q, 'Q' => $Q]);
-echo $json10;
+//$json10 = json_encode(['L' => $L, 'A' => $A, 'Ip' => $Ip, 'l' => $l, 'fp' => $fp, 'b' => $b, 'p' => $p, 'r' => $_rajon, 'fi' => $fi, 'tsk' => $_tsk, 'q' => $q, 'Q' => $Q]);
+//echo $json10;
 mysql_close($link);
 ?>

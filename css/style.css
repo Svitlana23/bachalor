@@ -43,3 +43,18 @@ input{
     margin: 0 auto;
 }
 
+.form form {
+  width: 300px;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+
+.mypanel {
+width: 360px;
+height: 185px;
+position: fixed;
+top: 50%;
+left: 50%;
+margin-top: -90px;
+margin-left: -180px;
+}

@@ -1,82 +1,96 @@
 <?php
+include_once('func.php');
+authCheck();
+$user_id=$_SESSION['user_id'];
+
 include "on.php";
 
 $begin = new DateTime($_GET['begin']);
 $end = new DateTime($_GET['end']);
+$end = $end->modify( '+1 day' );
 
 $n =date_diff($begin, $end);
 $day=$n->format('%a');
-//echo "<br> n = ".$day."<br>";
+echo "<br> n = ".$day."<br>";
 
 $period = new DatePeriod($begin, new DateInterval('P1D'), $end);
 
 $arrayOfDates = array_map(
+    function($item){return $item->format('Ym');},
+    iterator_to_array($period)
+);
+$Data = array_map(
     function($item){return $item->format('Y-m-d');},
     iterator_to_array($period)
 );
-//виводим масив дат
-//print_r($arrayOfDates);
+
+$dates = array_map(
+    function($item){return $item->format('d.m.Y');},
+    iterator_to_array($period)
+);
+$days1 = array_map(
+    function($item){return $item->format('j');},
+    iterator_to_array($period)
+);
 
 include 'simple_html_dom.php';
 
-
-
-    $query1 = mysql_query("SELECT MAX(id) FROM weather");  
-    $max_id = mysql_result($query1, 0);
-
+$j=$begin->format('j');
+$sum_prec = array();
+$sum_p = 0;
 for($i=0; $i<$day; $i++)
 {
-  /*  $query="SELECT date FROM weather WHERE date='$arrayOfDates[$i]'";
-    $result = mysql_query($query[$i]);
-    while ($row = mysql_fetch_array($result))
+    $html=file_get_html('http://www.eurometeo.ru/ukraina/chernyvetska-oblast/chernivci/archive/'.$arrayOfDates[$i]);
+    $days= $html->find('table.met8 th.bb',$days1[$i] - 1);
+    if($days)
     {
-        $date[]=$row['date'];
+        $date= $days->find('em',0);
+        $date->outertext='';
+        $date1[]=$days->innertext; 
+        
+        $e = $days->parent();
+        $osadki = $e->next_sibling()->next_sibling()->next_sibling()->next_sibling()->next_sibling()->next_sibling()->
+                next_sibling()->next_sibling()->next_sibling()->next_sibling();
+        if($days1[$i]%2!= 0)
+        {
+            for($k=1;$k<=8;$k++)
+            {
+                $prec=$osadki->find('td em',$k)->innertext; 
+                if ($prec == '')
+                {
+                    $prec = 0;
+                }
+                $sum_p += $prec;
+            }
+        }
+        else
+        {
+            for($k=9;$k<=16;$k++)
+            {
+                $prec=$osadki->find('td em',$k)->innertext; 
+                if ($prec == '')
+                {
+                    $prec = 0;
+                }
+                $sum_p += $prec;
+            }   
+        }
     }
-    */
-    $html=file_get_html('https://sinoptik.ua/погода-черновцы/'.$arrayOfDates[$i]);
     
-    if($html->find('td.p5'))
-    {
-        $temperature = $html->find('td.p5',2)->innertext;
-        $humidity= $html->find('td.p5',5)->innertext;
-        $precipitation = $html->find('td.p5',7)->innertext;  
-    }
     else
     {
-        $temperature = $html->find('td.p3',2)->innertext;
-        $humidity= $html->find('td.p3',5)->innertext;
-        $precipitation = $html->find('td.p3',7)->innertext;      
+        $date1[]="";
+        $sum_p = 0;       
     }
-    
-    if ($precipitation == '-')
-    {
-        $precipitation=0;
-    }
-    
-  /*  $query="SELECT date FROM weather WHERE date='$arrayOfDates[$i]'";
-    $row=mysql_query($query);
-   
-    if(!row)
-    {
-        $query1 = mysql_query("SELECT MAX(id) FROM weather");  
-        $max_id = mysql_result($query1, 0);
-    */
-        $date=$arrayOfDates[$i];
-        $id = $i+1;  
-  
-    $query="INSERT  INTO weather VALUES ('$id','$temperature','$humidity','$precipitation','$date')";
-        mysql_query($query);
-   /* }
-    else {
-        echo "Запис існує!";
-    } */
-    
+    $sum_prec[$i] = $sum_p;
+    $j++;
+    $sum_p = 0;
 }
-    
-   
 
- 
-/*$json11=json_encode(['id'=>$max_id, 'date'=>$date]);
-echo $json11;*/
+    $data = json_encode($Data);
+    $data_weather = json_encode($sum_prec);
+    $sql_in="INSERT INTO `data_q` (id_user, date_interval, weather) VALUES ('$user_id' , '$data', '$data_weather')";
+    mysql_query($sql_in);
+
 mysql_close($link);
 ?>
