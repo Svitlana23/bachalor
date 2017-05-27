@@ -7,10 +7,13 @@
 <head>
 	<title>Bachalor</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="css/ct-select-box.min.css">
+    
     <script src="js/jquery-latest.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/jquery.min.js"></script>
@@ -87,7 +90,7 @@
         });
         
         $(function () {
-            $("#submit1").bind("click", function (e){
+            $("#weather").bind("click", function (e){
                 e.preventDefault();
                 $.ajax({
                     method:'get',
@@ -99,8 +102,6 @@
                         'end': $('#end').val()
                     },
                     success: function funcS($json11){
-//                        console.log("id = "+$json11.id);
-//                        console.log("date= "+$json11.date);
                     }    
             });
             });
@@ -162,74 +163,269 @@
         });
     </script>
 </head>
-<body class="bod">
-<a href="logout.php">Вихід</a>
-	<div>
-		<h1 class="text-center">
-			Розрахунок глибини затоплення
-		</h1>
-	</div>
-	<div>
-<form  action="">
-                    <div class="container-fluid">
-			            <div class="row">
-                        <div class="col-md-2"></div>
-			                <div class="col-md-5">
-                            <div class="item">
-                                <ul class="place1">
-                                    <li>Площа водозбору води, F (км²):</li>
-                                    <li>Швидкість води в ріці до початку паводку, V0 (м/с):</li>
-                                    <li>Ширина дна ріки, a0 (м):</li>
-                                    <li>Ширина ріки до паводку, b0 (м):</li>
-                                    <li>Глибина ріки до паводку, h0 (м):</li>
-                                    <li>Інтенсивність випадання осадків, J (мм/год):</li>
-                                </ul>
-                            </div>
-                            </div>
-                            <div class="col-md-2">
-                            <div class="item">
-                                <ul class="place2">
-                                    <li><input  name="F" type="text" value="300" size="10"></li>
-                                    <li><input  name="V0" type="text" value="2" size="10"></li>
-                                    <li><input  name="a0" type="text" value="80" size="10"></li>
-                                    <li><input  name="b0" type="text" value="100" size="10"></li>
-                                    <li><input  name="h0" type="text" value="3" size="10"></li>
-                                    <li><input  name="J" type="text" value="75" size="10"></li>
-                                </ul>   
-                            </div>
-                        </div>
-                        <div class="col-md-3"></div>
-		            </div>
-		            </div>
-                    <div class="container">
-		            <div class="row">
-                       <div class="col-md-3"></div>
-                       <div class="col-md-6">
-                            <div class="text-center">
-                                <input class="calc" type="button" name="send" value="Обчислити">
-                            </div>
-                        </div>
-                        <div class="col-md-3"></div>   
-                           
-                    </div>
-                    <div class="row">
-                           <div class="col-md-3"></div>
-                           <div class="col-md-6">
-                           <div class="text-center">
-                           <h4>Результат:</h4><br>
-                            <p>Глибина затоплення:</p>
-                            <input  name="h3" type="text" size="10">
-                            <p>Швидкість потоку води під час паводку:</p>
-                            <input  name="V3" type="text" size="10">
-                            </div>
-                            </div>
-                            <div class="col-md-3"></div>
+<body>
 
-                        </div>
-                    </div>
-						</form>
+<header id="home">
+      <nav>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2">
+              <nav class="pull">
+                <ul class="top-nav">
+                  <li><a href="#depth">Розрахунок глибини затоплення <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+                  <li><a href="#prediction">Прогнозування стоку води <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+                  <li><a href="#prut">ГІС р.Прут<span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+<!--
+                  <li><a href="#portfolio">Portfolio <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+                  <li><a href="#team">Team <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+                  <li><a href="#contact">Get in Touch <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+-->
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <section class="hero" id="hero">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-right navicon">
+              <a id="nav-toggle" class="nav_slide_button" href="#"><span></span></a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-center inner">
+              <h1 class="animated fadeInDown">DANA<span>GIS</span></h1>
+              <p class="animated fadeInUp delay-05s">Інформаційна система прогнозування <em>паводків</em></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center">
+              <a href="#prut" class="learn-more-btn">Прогнозування р. Прут</a>
+            </div>
+          </div>
+        </div>
+      </section>
+</header>
+    <section class="intro text-center section-padding" id="depth">
+      <div class="container">
+        <div class="row">
+         <div class="col-md-8 col-md-offset-2 wp1">
+             <h1 class="arrow">Розрахунок глибини затоплення</h1>
+         </div>
+         
+         <div class="col-md-5 col-md-offset-2 text-left">
+            <h4>Площа водозбору води, F (км²): <input name="F" type="text" value="300" size="10"></h4>
+            <h4>Швидкість води в річці до початку паводку, V0 (м/с): <input  name="V0" type="text" value="2" size="10"></h4>
+            <h4>Ширина дна ріки, a0 (м): <input  name="a0" type="text" value="80" size="10"></h4>
+        </div>
+        <div class="col-md-4 text-left">
+            <h4>Ширина ріки до паводку, b0 (м): <input  name="b0" type="text" value="100" size="10"></h4>
+            <h4>Інтенсивність випадання осадків, J (мм/год): <input  name="J" type="text" value="75" size="10"></h4>
+            <h4>Глибина ріки до паводку, h0 (м): <input  name="h0" type="text" value="3" size="10"></h4>
+        </div>
+        <div></div>
+        <div class="col-md-8 col-md-offset-2 text-center">
+            <input id="river_level" type="button" name="send" value="Обчислити">
+            <h1>Результат:</h1>
+            <div class="col-md-4 col-md-offset-1 text-left">
+                <h3>Глибина затоплення: <input  name="h3" type="text" size="15"></h3>
+            </div>
+            <div class="col-md-7 text-left">
+                <h3>Швидкість потоку води під час паводку: <input  name="V3" type="text" size="15"></h3>
+            </div>
+        </div>
+        
+            
+      </div>
+  </div>
+</section>
+
+<section class="text-center" id="prediction">
+    <div class="container">
+       <div class="row">
+           <h1>Прогнозування стоку води</h1>
+           <br>
+       </div>
+       <div class="container">
+           <div class="row">
+              <form action="" method="get">
+                  <div class="col-md-4"></div>
+                  <div class="col-md-2">
+                      <input type="date" id="begin" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+                       <br>
+                       <br>
+                        <input type="date" id="end" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+                  </div>
+                  <div class="col-md-6 text-left">
+                      <input type="button" id="weather" value="Вибрати інтервал часу">
+                  </div>  
+            </form>
+           </div>
+<div class="row">
+    <form action="" method="get">
+       <div class="row">
+       <div class="col-md-2"></div>
+        <div class="col-md-6 text-center">
+             <table id="input_data">
+                 <tr>
+                     <th>
+                         <label for="L">Довжина водозбору L (км) </label>
+                     </th>
+                     <th>
+                         <input type="text" name="L" id="L" size="10" value="7">
+                     </th>
+                 </tr>
+                 <tr>
+                     <th>
+                         <label for="A">Площа водозбору A (км²) </label>
+                     </th>
+                     <th>
+                         <input type="text" name="A" id="A" size="10" value="20">
+                     </th>
+                 </tr>
+                <tr>
+                     <th>
+                         <label for="Ip">Середньозважений ухил схилів басейну Ip (‰) </label>
+                     </th>
+                     <th>
+                         <input type="text" name="Ip" id="Ip" size="10" value="11">
+                     </th>
+                 </tr>
+                <tr>
+                     <th>
+                         <label for="Isk">Середній ухил схилів басейну Isk (‰) </label>
+                     </th>
+                     <th>
+                         <input type="text" name="Isk" id="Isk" size="10" value="15">
+                     </th>
+                 </tr>
+                <tr>
+                     <th>
+                         <label for="l">Середня довжина схилів басейнів l (км) </label>
+                     </th>
+                     <th>
+                         <input type="text" name="l" id="l" size="10" value="8">
+                     </th>
+                 </tr>
+             </table>
+          </div>
+          <div class="col-md-2 text-center">
+              
+                <table>
+                    <tr>
+                        <th>
+                            <select-box id="rajon" required placeholder="Оберіть район кривих редукцій згідно карти поданої нижче">
+                                <select-box-header></select-box-header>
+                                <select-box-content>
+                                    <select-box-option value="1">7,8,10,29</select-box-option>
+                                    <select-box-option value="2">5,6,14,26,33,5в</select-box-option>
+                                    <select-box-option value="3">3,4,9,17,27,32</select-box-option>
+                                    <select-box-option value="4">2,12,16,24,28,30</select-box-option>
+                                    <select-box-option value="5">1,11,18,22, 31</select-box-option>
+                                    <select-box-option value="6">13,19,23,25,34</select-box-option>
+                                    <select-box-option value="7">15,20,21</select-box-option>
+                                    <select-box-option value="8">5г (Закарпатська низовина)</select-box-option>
+                                    <select-box-option value="9">5а (Північні схили Карпат)</select-box-option>
+                                    <select-box-option value="10">5б (Північні схили Карпат)</select-box-option>
+                                    <select-box-option value="11">6а (Північні схили Гірського Криму)</select-box-option>
+                                    <select-box-option value="12">6а (Південні схили Гірського Криму)</select-box-option>
+                                    <select-box-option value="13">6а (Керченський півострів)</select-box-option>
+                                </select-box-content>
+                            </select-box>
+                        </th>
+                        <th>
+                           <?php
+                            include "on.php"; 
+                                $query = "SELECT * FROM `tabl20`";
+                                $result = mysql_query($query) or die(mysql_error());
+                                print '<select-box id="_Lambda"  required placeholder="Оберіть площу водозбору А (км²), середню висоту водозбору Н (м)">';
+                                print '<select-box-header></select-box-header><select-box-content>';
+                                while ($row = mysql_fetch_array($result)) { 
+                                    print '<select-box-option value="'.$row['number'].'">Район '.$row['raion']." Площа / висота ".$row['A_Hb'].'</select-box-option>'; 
+                                }
+                                mysql_free_result($result);
+                                print '</select-box-content></select-box>';
+                            ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <select-box id="_p" required placeholder="Оберіть ймовірність перевищення Р%">
+                                <select-box-header></select-box-header>
+                                <select-box-content>
+                                    <select-box-option value="1">0.1</select-box-option>
+                                    <select-box-option value="2">1</select-box-option>
+                                    <select-box-option value="3">2</select-box-option>
+                                    <select-box-option value="4">3</select-box-option>
+                                    <select-box-option value="5">5</select-box-option>
+                                    <select-box-option value="6">10</select-box-option>
+                                    <select-box-option value="7">25</select-box-option>
+                                </select-box-content>
+                            </select-box>
+                        </th>
+                        <th>
+                            <?php
+                                $query = "SELECT * FROM `tabl18`";
+                                $result = mysql_query($query) or die(mysql_error());
+                                print '<select-box id="x_xp"  required placeholder="Оберіть характеристику русла і заплави">';
+                                print '<select-box-header></select-box-header><select-box-content>';
+                                while ($row = mysql_fetch_array($result)) { 
+                                    print '<select-box-option value="'.$row['id'].'">'.$row['Characteristika'].'</select-box-option>'; 
+                                }
+                                mysql_free_result($result);
+                                print '</select-box-content></select-box>';
+                            ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                           <?php
+                                $query = "SELECT * FROM `tabl27`";
+                                $result = mysql_query($query) or die(mysql_error());
+                                print '<select-box id="_fi"  required placeholder="Оберіть тип гірського району, типи грунтів">';
+                                print '<select-box-header></select-box-header><select-box-content>';
+                                while ($row = mysql_fetch_array($result)) { 
+                                    print '<select-box-option value="'.$row['id'].'">'.$row['type'].'</select-box-option>'; 
+                                }
+                                mysql_free_result($result);
+                                print '</select-box-content></select-box>';
+                            ?>
+                        </th>
+                        <th>
+                            <select-box id="_Tsk" required placeholder="Оберіть тривалість схилового добігання">
+                                <select-box-header></select-box-header>
+                                <select-box-content>
+                                    <select-box-option value="1">10</select-box-option>
+                                    <select-box-option value="2">30</select-box-option>
+                                    <select-box-option value="3">60</select-box-option>
+                                    <select-box-option value="4">100</select-box-option>
+                                    <select-box-option value="5">150</select-box-option>
+                                    <select-box-option value="6">200</select-box-option>
+                                </select-box-content>
+                            </select-box>
+                        </th>
+                    </tr>
+                </table>
+           </div>
+       </div>
+       <div class="row">
+           <div class="col-md-6 text-right">
+               <input type="button" id="submit" value="Обчислити">
+           </div>
+           <div class="col-md-6 text-left">
+               <input type="button" id="chart" onclick="location.href='#container2'"  value="Отримати результат у вигляді графіка">
+           </div>
+       </div>         
+    </form>
     </div>
+    </div>
+</div>
+</section>
 
+
+
+<!--
 <div class="text-center">
     <form action="" method="get">
         <input type="date" id="begin" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
@@ -261,7 +457,7 @@
                 <input type="text" name="l" id="l" size="10" value="8">
                 <br>
                 <?php
-                    include "on.php"; 
+                    /*include "on.php"; 
                     $query = "SELECT * FROM `tabl18`";
                     $result = mysql_query($query) or die(mysql_error());
                     print '<select-box id="x_xp"  required placeholder="Оберіть характеристику русла і заплави">';
@@ -284,7 +480,7 @@
                     print '<select-box-header></select-box-header><select-box-content>';
                     while ($row = mysql_fetch_array($result)) { print '<select-box-option value="'.$row['number'].'">Район '.$row['raion']." Площа / висота ".$row['A_Hb'].'</select-box-option>'; }
                     mysql_free_result($result);
-                    print '</select-box-content></select-box>';
+                    print '</select-box-content></select-box>';*/
                 ?>
 
                 <select-box id="rajon" required placeholder="Оберіть район кривих редукцій згідно карти">
@@ -346,11 +542,18 @@
     </div>
 </div>
 
+-->
 
+<div class="text-center">
+    <img src="img/map_reduction.jpg" id="map_reduction" alt="">
+</div>
 <div>
     <div id="container2">
     </div>
 </div>
+<a href="logout.php">Вихід</a>
 <script src="js/myscript.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/waypoints.min.js"></script>
 </body>
 </html>

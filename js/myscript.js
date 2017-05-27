@@ -1,4 +1,4 @@
-$("input[name=send]").click(function () { // Событие нажатия на кнопку "Расчёт" 
+$("#river_level").click(function () { // Событие нажатия на кнопку "Расчёт" 
     var F = $("input[name=F]").val() * 1; 
     var V0 = $("input[name=V0]").val() * 1;
     var a0 = $("input[name=a0]").val() * 1; 
