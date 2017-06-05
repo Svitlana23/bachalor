@@ -85,12 +85,17 @@ for($i=0; $i<$day; $i++)
     $sum_prec[$i] = $sum_p;
     $j++;
     $sum_p = 0;
+    
+    $query="SELECT level FROM `water_level` WHERE data='$Data[$i]'";
+    $result = mysql_query($query);
+    $row = mysql_fetch_array($result);
+    $level1[$i] = $row['level']/100; 
 }
 
     $data = json_encode($Data);
     $data_weather = json_encode($sum_prec);
-    $sql_in="INSERT INTO `data_q` (id_user, date_interval, weather) VALUES ('$user_id' , '$data', '$data_weather')";
+    $level = json_encode($level1);
+    $sql_in="INSERT INTO `data_q` (id_user, date_interval, weather, level) VALUES ('$user_id' , '$data', '$data_weather', '$level')";
     mysql_query($sql_in);
-
 mysql_close($link);
 ?>

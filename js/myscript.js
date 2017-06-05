@@ -15,7 +15,7 @@ $("#river_level").click(function () { // Событие нажатия на кн
         Qmax=Q0+(J*F)/3.6;
     var ctg;
         ctg=(b0-a0)/(2*h0);
-        h=Math.pow((2*Qmax*Math.pow(((b0-a0)/(ctg+ctg)),5/3)/(b0*V0)),3/8)-(b0-a0)/(ctg+ctg);
+        h=Math.pow((2*Qmax*Math.pow(((b0-a0)/(ctg+ctg)),5/3)),3/8)-(b0-a0)/(ctg+ctg);
         var Smax;
         b=a0+2*h*ctg;    
         Smax=0.5*(a0+b)*h;
@@ -48,7 +48,7 @@ $("#river_level").click(function () { // Событие нажатия на кн
               f=1.32;  
             }
     var V3;
-        V3=Vmax*f;
+        V3=M*f;
         var res1,res2;
         res1=h3.toFixed(2);
         res2=V3.toFixed(2);

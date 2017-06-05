@@ -20,7 +20,41 @@
     <script src="js/highcharts.js"></script>
     <script src="js/exporting.js"></script>
     <script src="js/ct-select-box.min.js"></script>
+    <script src="js/spearson.js"></script>
+<!--
     <script>
+        
+    var x = [3, 4, 5];
+    var y = [78, 57, 65];
+    var corr = spearson.correlation.spearman(x, y);
+        console.log("corr = " + corr);
+</script>
+-->
+   
+    <script>
+        
+        $(function () {
+            $("#correl").bind("click", function (e){
+                e.preventDefault();
+                $.ajax({
+                    method:'get',
+                    url:"correlation_arrays.php",
+                    type:"GET",
+                    dataType: "json",
+                    data: {
+                        'begin_cor1': $('#begin_cor1').val(),
+                        'begin_cor2': $('#begin_cor2').val(),
+                        'end_cor1': $('#end_cor1').val(),
+                        'end_cor2': $('#end_cor2').val()
+                    },
+                    success: function funcS($cor){
+                       var corr = spearson.correlation.spearman($cor.Q, $cor.Q);
+                        console.log("corr = " + corr);
+                    }    
+            });
+            });
+        });
+        
         function funcBefore(){
             $("#information").text("Очікування даних");
         }
@@ -47,43 +81,6 @@
                     },
                     beforeSend: funcBefore,
                     success: function funcSuccess($json10) {
-                    //document.querySelector('.data1').innerHTML += "";
-                        //$json10 = JSON.parse($json10);
-                        $L= "L = " +$json10.L;
-                        $A= "A = " +$json10.A;
-                        $Ip= "Ip = "+$json10.Ip;
-                        $l= "l = "+$json10.l;
-                        $b= "b = "+$json10.b;
-                        $p= "p = "+$json10.p;
-                        $r= "r = "+$json10.r;
-                        $fi= "fi = "+$json10.fi;
-                        $tsk= "tsk = "+$json10.tsk;
-                        
-                        var Fp = new Array ();
-                        var q = new Array ();
-                        var Q = new Array ();
-                        for($i=0;$i<10;$i++)
-                        {
-                            Fp.push(parseFloat($json10.fp[$i]));
-                            q.push(parseFloat($json10.q[$i]));
-                            Q.push(parseFloat($json10.Q[$i]));
-                        }
-                        console.log($L);
-                        console.log($A);
-                        console.log($Ip);
-                        console.log($l);
-                        console.log($b);
-                        console.log($p);
-                        console.log($r);
-                        console.log($fi);
-                        console.log($tsk);
-                        
-                        for($i=0;$i<10;$i++)
-                            {
-                                console.log("Fp" + "[" + $i +"] = " + Fp[$i]);
-                                console.log("q" + "[" + $i +"] = " + q[$i]);
-                                console.log("Q" + "[" + $i +"] = " + Q[$i]);
-                            }
                     }
             });
             });
@@ -102,28 +99,64 @@
                         'end': $('#end').val()
                     },
                     success: function funcS($json11){
+                       
                     }    
             });
             });
         });
         
+$(function () {
+    $("#river_level").bind("click", function (e){
+        e.preventDefault();
+        $.ajax({
+            method:'get',
+            url:"depth.php",
+            type:"GET",
+            dataType: "json",
+            data: {
+                'F':$('#F').val(),
+                'V0':$('#V0').val(),
+                'a0':$('#a0').val(),
+                'b0':$('#b0').val(),
+                'h0':$('#h0').val(),
+                'J':$('#J').val()
+            },
+            success: function depth($depth){
+                console.log("q_ser = " + $depth.q_ser);
+                console.log("V = " + $depth.V);
+                console.log("M1 = " + $depth.M1);
+                console.log("y = " + $depth.y);
+                console.log("a = " + $depth.a);
+                console.log("h3 = " + $depth.h3);
+                console.log("V3 = " + $depth.V3);
+                $('#h3').val($depth.h3);
+                $('#V3').val($depth.V3);
+                $('#res1').text("y = " + $depth.y);
+                $('#res2').text("a = " + $depth.a);
+            }    
+    });
+    });
+});
+        
         $(function () {
-            $("#chart").bind("click", function (e){
+            $("#Q").bind("click", function (e){
                 e.preventDefault();
                 $.ajax({
                     method:'get',
-                    url:"chart.php",
+                    url:"Q.php",
                     type:"GET",
                     dataType: "json",
                     success: function funcChart($json6){
-                        console.log($json6);
-                        $('#container2').highcharts({
+                        $('#Q_graph').highcharts({
+                        chart:{
+                             type: 'spline'   
+                        },
                         title: {
-                            text: 'МАКСИМАЛЬНИЙ СТОК ВОДИ РІЧОК ДОЩОВИХ ПАВОДКІВ',
+                            text: 'МАКСИМАЛЬНИЙ СТІК ВОДИ РІЧОК ДОЩОВИХ ПАВОДКІВ',
                             x: -20 //center
                         },
                         subtitle: {
-                        text: 'kbkbbkj',
+                        text: '',
                         x: -20
                     },
                         xAxis: {
@@ -131,11 +164,84 @@
                                 text:'Дата'
                             },
                             type: 'date',
+                            labels: {
+                                overlow: 'justify'
+                            },
                             categories: $json6.data
                         },
                         yAxis: {
                             title: {
-                                text: 'Qр%'
+                                text: 'Qр%, м3/с'
+                            }
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'middle',
+                            borderWidth: 0
+                        },
+                            plotOptions: {
+                                spline: {
+                                    lineWidth: 4,
+                                    states: {
+                                        hover: {
+                                            lineWidth: 5
+                                        }
+                                    },
+                                    marker: {
+                                        enabled: false
+                                    },
+                                }
+                            },
+                        series: [{
+                            name: 'Qр%',
+                            data: $json6.Q,
+                            tooltip: {
+                            valueSuffix: 'м3/с'
+                        }
+                        }],
+                        navigation: {
+                            menuItemStyle: {
+                                fontSize: '10px'
+                            }
+                        }
+                    });
+                    }    
+            });
+            });
+        });
+        
+        $(function () {
+            $("#weather_g").bind("click", function (e){
+                e.preventDefault();
+                $.ajax({
+                    method:'get',
+                    url:"weather.php",
+                    type:"GET",
+                    dataType: "json",
+                    success: function funcChart2($json7){
+                         $('#weather_graph').highcharts({
+                             chart:{
+                             type: 'spline'   
+                        },
+                        title: {
+                            text: 'Опади',
+                            x: -20 //center
+                        },
+                        subtitle: {
+                        text: '',
+                        x: -20
+                    },
+                        xAxis: {
+                            title:{
+                                text:'Дата'
+                            },
+                            type: 'date',
+                            categories: $json7.data
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Опади, мм'
                             },
                             plotLines: [{
                                 value: 0,
@@ -149,11 +255,94 @@
                             verticalAlign: 'middle',
                             borderWidth: 0
                         },
+                             plotOptions: {
+                                spline: {
+                                    lineWidth: 4,
+                                    states: {
+                                        hover: {
+                                            lineWidth: 5
+                                        }
+                                    },
+                                    marker: {
+                                        enabled: false
+                                    },
+                                }
+                            },
                         series: [{
-                            name: 'Qр%',
-                            data: $json6.Q,
+                            name: 'Опади',
+                            data: $json7.weather,
                             tooltip: {
                             valueSuffix: 'мм'
+                        }
+                        }]
+                    });
+                    }    
+            });
+            });
+        });
+        
+        $(function () {
+            $("#level").bind("click", function (e){
+                e.preventDefault();
+                $.ajax({
+                    method:'get',
+                    url:"level.php",
+                    type:"GET",
+                    dataType: "json",
+                    success: function funcChart3($data_level){
+                        $('#level_graph').highcharts({
+                        chart:{
+                             type: 'spline'   
+                        },
+                        title: {
+                            text: 'РІВЕНЬ ВОДИ В РІЧЦІ',
+                            x: -20 //center
+                        },
+                        subtitle: {
+                        text: '',
+                        x: -20
+                    },
+                        xAxis: {
+                            title:{
+                                text:'Дата'
+                            },
+                            type: 'date',
+                            categories: $data_level.data
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'h, см'
+                            },
+                            plotLines: [{
+                                value: 0,
+                                width: 1,
+                                color: '#808080'
+                            }]
+                        },
+                        plotOptions: {
+                                spline: {
+                                    lineWidth: 4,
+                                    states: {
+                                        hover: {
+                                            lineWidth: 5
+                                        }
+                                    },
+                                    marker: {
+                                        enabled: false
+                                    },
+                                }
+                            },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'middle',
+                            borderWidth: 0
+                        },
+                        series: [{
+                            name: 'h',
+                            data: $data_level.level,
+                            tooltip: {
+                            valueSuffix: 'см'
                         }
                         }]
                     });
@@ -175,11 +364,7 @@
                   <li><a href="#depth">Розрахунок глибини затоплення <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
                   <li><a href="#prediction">Прогнозування стоку води <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
                   <li><a href="#prut">ГІС р.Прут<span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
-<!--
-                  <li><a href="#portfolio">Portfolio <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
-                  <li><a href="#team">Team <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
-                  <li><a href="#contact">Get in Touch <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
--->
+                  <li><a href="#correlation">Кореляція<span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
                 </ul>
               </nav>
             </div>
@@ -207,6 +392,7 @@
         </div>
       </section>
 </header>
+   
     <section class="intro text-center section-padding" id="depth">
       <div class="container">
         <div class="row">
@@ -215,28 +401,26 @@
          </div>
          
          <div class="col-md-5 col-md-offset-2 text-left">
-            <h4>Площа водозбору води, F (км²): <input name="F" type="text" value="300" size="10"></h4>
-            <h4>Швидкість води в річці до початку паводку, V0 (м/с): <input  name="V0" type="text" value="2" size="10"></h4>
-            <h4>Ширина дна ріки, a0 (м): <input  name="a0" type="text" value="80" size="10"></h4>
+            <h4>Площа водозбору води, F (км²): <input name="F" id="F" type="text" value="200" size="10"></h4>
+            <h4>Швидкість води в річці до початку паводку, V0 (м/с): <input  name="V0" id="V0" type="text" value="1" size="10"></h4>
+            <h4>Ширина дна ріки, a0 (м): <input  name="a0" id="a0" type="text" value="80" size="10"></h4>
         </div>
         <div class="col-md-4 text-left">
-            <h4>Ширина ріки до паводку, b0 (м): <input  name="b0" type="text" value="100" size="10"></h4>
-            <h4>Інтенсивність випадання осадків, J (мм/год): <input  name="J" type="text" value="75" size="10"></h4>
-            <h4>Глибина ріки до паводку, h0 (м): <input  name="h0" type="text" value="3" size="10"></h4>
+            <h4>Ширина ріки до паводку, b0 (м): <input  name="b0" id="b0" type="text" value="100" size="10"></h4>
+            <h4>Інтенсивність випадання осадків, J (мм/год): <input  name="J" id="J" type="text" value="25" size="10"></h4>
+            <h4>Глибина ріки до паводку, h0 (м): <input  name="h0" id="h0" type="text" value="1" size="10"></h4>
         </div>
         <div></div>
         <div class="col-md-8 col-md-offset-2 text-center">
             <input id="river_level" type="button" name="send" value="Обчислити">
             <h1>Результат:</h1>
             <div class="col-md-4 col-md-offset-1 text-left">
-                <h3>Глибина затоплення: <input  name="h3" type="text" size="15"></h3>
+                <h3>Глибина затоплення: <input  name="h3" id="h3" type="text" size="15"></h3>
             </div>
             <div class="col-md-7 text-left">
-                <h3>Швидкість потоку води під час паводку: <input  name="V3" type="text" size="15"></h3>
+                <h3>Швидкість потоку води під час паводку: <input  name="V3" id="V3" type="text" size="15"></h3>
             </div>
         </div>
-        
-            
       </div>
   </div>
 </section>
@@ -258,7 +442,8 @@
                         <input type="date" id="end" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
                   </div>
                   <div class="col-md-6 text-left">
-                      <input type="button" id="weather" value="Вибрати інтервал часу">
+                      <input type="button" id="weather"  value="Записати погоду">
+                      
                   </div>  
             </form>
            </div>
@@ -414,7 +599,9 @@
                <input type="button" id="submit" value="Обчислити">
            </div>
            <div class="col-md-6 text-left">
-               <input type="button" id="chart" onclick="location.href='#container2'"  value="Отримати результат у вигляді графіка">
+               <input type="button" id="level" onclick="location.href='#level_graph'"  value="Рівень води">
+               <input type="button" id="weather_g" onclick="location.href='#weather_graph'"  value="Погода">
+               <input type="button" id="Q" onclick="location.href='#Q_graph'"  value="Стік води">
            </div>
        </div>         
     </form>
@@ -543,16 +730,64 @@
 </div>
 
 -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <div id="weather_graph">
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <div id="Q_graph">
+            </div>
+            <div id="level_graph">
+</div>
+        </div>
+    </div>
+</div>
+
+
 
 <div class="text-center">
     <img src="img/map_reduction.jpg" id="map_reduction" alt="">
 </div>
-<div>
-    <div id="container2">
-    </div>
+    
+    
+<section class="intro text-center section-padding" id="correlation">
+<div class="container">
+    <div class="row">
+     <div class="col-md-8 col-md-offset-2 wp1">
+         <h1 class="arrow">Кореляція</h1>
+     </div>
+        <div class="col-md-4"></div>
+        </div>
+         <div class="row">
+          <form action="" method="get">
+              <div class="col-md-2"></div>
+              <div class="col-md-4 text-right">
+                 <br>
+                  Q1 = <input type="date" id="begin_cor1" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+                  <br>
+                  <br>
+                  Q2 = <input type="date" id="begin_cor2" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+              </div>
+              <div class="col-md-4 text-left">
+                 <br>
+                  <input type="date" id="end_cor1" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+                   <br>
+                   <br>
+                    <input type="date" id="end_cor2" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+              </div>
+              <div class="col-md-2">
+                  <input type="button" id="correl"  value="Здійснити кореляцію">
+
+              </div>  
+        </form>
+        </div>
+  
 </div>
+</section>
 <a href="logout.php">Вихід</a>
-<script src="js/myscript.js"></script>
+<!--<script src="js/myscript.js"></script>-->
 <script src="js/scripts.js"></script>
 <script src="js/waypoints.min.js"></script>
 </body>
