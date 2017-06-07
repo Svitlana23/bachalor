@@ -42,14 +42,49 @@
                     type:"GET",
                     dataType: "json",
                     data: {
-                        'begin_cor1': $('#begin_cor1').val(),
-                        'begin_cor2': $('#begin_cor2').val(),
-                        'end_cor1': $('#end_cor1').val(),
-                        'end_cor2': $('#end_cor2').val()
+                        'L1':$('#L1').val(),
+                        'A1':$("#A1").val(),
+                        'Ip1':$("#Ip1").val(),
+                        'l1':$("#l1").val(),
+                        'selectedValue': $('#x_xp1').get(0).value, 
+                        'selectedValue1': $('#_fi1').get(0).value,
+                        'selectedValue2': $("#rajon1").get(0).text,
+                        'selectedValue3': $("#_Tsk1").get(0).text,
+                        'selectedValue4': $('#_Lambda1').get(0).value,
+                        'selectedValue5': $('#_p1').get(0).value
+                    },
+                    beforeSend: function before(){
+                        $('#bef').text("Wait");
                     },
                     success: function funcS($cor){
-                       var corr = spearson.correlation.spearman($cor.Q, $cor.Q);
+//                        console.log("cor1 = " + $cor.Q1);
+//                        console.log("cor2 = " + $cor.Q2);
+//                       var corr = spearson.correlation.spearman($cor.Q1, $cor.Q2);
+//                        console.log("corr = " + corr);
+                        $('#bef').text("");
+                    }    
+            });
+            });
+        });
+        
+         $(function () {
+            $("#koef").bind("click", function (e){
+                e.preventDefault();
+                $.ajax({
+                    method:'get',
+                    url:"koef.php",
+                    type:"GET",
+                    dataType: "json",
+                    data: {
+                        
+                    },
+                    success: function funcS($data){
+//                        console.log("cor1 = " + $data.Q1);
+//                        console.log("cor2 = " + $data.Q2);
+                       var corr = spearson.correlation.spearman($data.Q1, $data.Q2, true);
                         console.log("corr = " + corr);
+                        //console.log("a = " + $data.a);
+                        $('#inp_cor').val(corr);
                     }    
             });
             });
@@ -99,6 +134,27 @@
                         'end': $('#end').val()
                     },
                     success: function funcS($json11){
+                       
+                    }    
+            });
+            });
+        });
+        
+        $(function () {
+            $("#cor_weather").bind("click", function (e){
+                e.preventDefault();
+                $.ajax({
+                    method:'get',
+                    url:"cor_weather.php",
+                    type:"GET",
+                    dataType: "json",
+                    data: {
+                        'begin_cor1': $('#begin_cor1').val(),
+                        'begin_cor2': $('#begin_cor2').val(),
+                        'end_cor1': $('#end_cor1').val(),
+                        'end_cor2': $('#end_cor2').val()
+                    },
+                    success: function funcS(){
                        
                     }    
             });
@@ -765,24 +821,185 @@ $(function () {
               <div class="col-md-2"></div>
               <div class="col-md-4 text-right">
                  <br>
-                  Q1 = <input type="date" id="begin_cor1" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+                  Q1 = <input type="date" id="begin_cor1" name="" min="2012-01-01" max="2020-12-12" value="2017-01-01">
                   <br>
                   <br>
-                  Q2 = <input type="date" id="begin_cor2" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
+                  Q2 = <input type="date" id="begin_cor2" name="" min="2012-01-01" max="2020-12-12" value="2016-01-01">
+              </div>
+              <div class="col-md-2 text-left">
+                 <br>
+                  <input type="date" id="end_cor1" name="" min="2012-01-01" max="2020-12-12" value="2017-01-01">
+                   <br>
+                   <br>
+                    <input type="date" id="end_cor2" name="" min="2012-01-01" max="2020-12-12" value="2016-01-01">
               </div>
               <div class="col-md-4 text-left">
                  <br>
-                  <input type="date" id="end_cor1" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
-                   <br>
-                   <br>
-                    <input type="date" id="end_cor2" name="" min="2017-01-01" max="2020-12-12" value="2017-01-01">
-              </div>
-              <div class="col-md-2">
-                  <input type="button" id="correl"  value="Здійснити кореляцію">
-
+                 <br>
+                  <input type="button" id="cor_weather"  value="Записати погоду">
               </div>  
+              
         </form>
         </div>
+        <div class="container">
+<div class="row">
+    <form action="" method="get">
+       <div class="row">
+       <div class="col-md-2"></div>
+        <div class="col-md-6 text-center">
+             <table id="input_data">
+                 <tr>
+                     <th>
+                         <label for="L">Довжина водозбору L (км) </label>
+                     </th>
+                     <th>
+                         <input type="text" name="L" id="L1" size="10" value="7">
+                     </th>
+                 </tr>
+                 <tr>
+                     <th>
+                         <label for="A">Площа водозбору A (км²) </label>
+                     </th>
+                     <th>
+                         <input type="text" name="A" id="A1" size="10" value="20">
+                     </th>
+                 </tr>
+                <tr>
+                     <th>
+                         <label for="Ip">Середньозважений ухил схилів басейну Ip (‰) </label>
+                     </th>
+                     <th>
+                         <input type="text" name="Ip" id="Ip1" size="10" value="11">
+                     </th>
+                 </tr>
+                <tr>
+                     <th>
+                         <label for="Isk">Середній ухил схилів басейну Isk (‰) </label>
+                     </th>
+                     <th>
+                         <input type="text" name="Isk" id="Isk1" size="10" value="15">
+                     </th>
+                 </tr>
+                <tr>
+                     <th>
+                         <label for="l">Середня довжина схилів басейнів l (км) </label>
+                     </th>
+                     <th>
+                         <input type="text" name="l" id="l1" size="10" value="8">
+                     </th>
+                 </tr>
+             </table>
+          </div>
+          <div class="col-md-2 text-center">
+              
+                <table>
+                    <tr>
+                        <th>
+                            <select-box id="rajon1" required placeholder="Оберіть район кривих редукцій згідно карти поданої нижче">
+                                <select-box-header></select-box-header>
+                                <select-box-content>
+                                    <select-box-option value="1">7,8,10,29</select-box-option>
+                                    <select-box-option value="2">5,6,14,26,33,5в</select-box-option>
+                                    <select-box-option value="3">3,4,9,17,27,32</select-box-option>
+                                    <select-box-option value="4">2,12,16,24,28,30</select-box-option>
+                                    <select-box-option value="5">1,11,18,22, 31</select-box-option>
+                                    <select-box-option value="6">13,19,23,25,34</select-box-option>
+                                    <select-box-option value="7">15,20,21</select-box-option>
+                                    <select-box-option value="8">5г (Закарпатська низовина)</select-box-option>
+                                    <select-box-option value="9">5а (Північні схили Карпат)</select-box-option>
+                                    <select-box-option value="10">5б (Північні схили Карпат)</select-box-option>
+                                    <select-box-option value="11">6а (Північні схили Гірського Криму)</select-box-option>
+                                    <select-box-option value="12">6а (Південні схили Гірського Криму)</select-box-option>
+                                    <select-box-option value="13">6а (Керченський півострів)</select-box-option>
+                                </select-box-content>
+                            </select-box>
+                        </th>
+                        <th>
+                           <?php
+                            include "on.php"; 
+                                $query = "SELECT * FROM `tabl20`";
+                                $result = mysql_query($query) or die(mysql_error());
+                                print '<select-box id="_Lambda1"  required placeholder="Оберіть площу водозбору А (км²), середню висоту водозбору Н (м)">';
+                                print '<select-box-header></select-box-header><select-box-content>';
+                                while ($row = mysql_fetch_array($result)) { 
+                                    print '<select-box-option value="'.$row['number'].'">Район '.$row['raion']." Площа / висота ".$row['A_Hb'].'</select-box-option>'; 
+                                }
+                                mysql_free_result($result);
+                                print '</select-box-content></select-box>';
+                            ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <select-box id="_p1" required placeholder="Оберіть ймовірність перевищення Р%">
+                                <select-box-header></select-box-header>
+                                <select-box-content>
+                                    <select-box-option value="1">0.1</select-box-option>
+                                    <select-box-option value="2">1</select-box-option>
+                                    <select-box-option value="3">2</select-box-option>
+                                    <select-box-option value="4">3</select-box-option>
+                                    <select-box-option value="5">5</select-box-option>
+                                    <select-box-option value="6">10</select-box-option>
+                                    <select-box-option value="7">25</select-box-option>
+                                </select-box-content>
+                            </select-box>
+                        </th>
+                        <th>
+                            <?php
+                                $query = "SELECT * FROM `tabl18`";
+                                $result = mysql_query($query) or die(mysql_error());
+                                print '<select-box id="x_xp1"  required placeholder="Оберіть характеристику русла і заплави">';
+                                print '<select-box-header></select-box-header><select-box-content>';
+                                while ($row = mysql_fetch_array($result)) { 
+                                    print '<select-box-option value="'.$row['id'].'">'.$row['Characteristika'].'</select-box-option>'; 
+                                }
+                                mysql_free_result($result);
+                                print '</select-box-content></select-box>';
+                            ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                           <?php
+                                $query = "SELECT * FROM `tabl27`";
+                                $result = mysql_query($query) or die(mysql_error());
+                                print '<select-box id="_fi1"  required placeholder="Оберіть тип гірського району, типи грунтів">';
+                                print '<select-box-header></select-box-header><select-box-content>';
+                                while ($row = mysql_fetch_array($result)) { 
+                                    print '<select-box-option value="'.$row['id'].'">'.$row['type'].'</select-box-option>'; 
+                                }
+                                mysql_free_result($result);
+                                print '</select-box-content></select-box>';
+                            ?>
+                        </th>
+                        <th>
+                            <select-box id="_Tsk1" required placeholder="Оберіть тривалість схилового добігання">
+                                <select-box-header></select-box-header>
+                                <select-box-content>
+                                    <select-box-option value="1">10</select-box-option>
+                                    <select-box-option value="2">30</select-box-option>
+                                    <select-box-option value="3">60</select-box-option>
+                                    <select-box-option value="4">100</select-box-option>
+                                    <select-box-option value="5">150</select-box-option>
+                                    <select-box-option value="6">200</select-box-option>
+                                </select-box-content>
+                            </select-box>
+                        </th>
+                    </tr>
+                </table>
+           </div>
+       </div>
+       <div class="row">
+           <div class="col-md-12 text-center">
+                <input type = "button" id = "correl"  value = "Здійснити кореляцію">
+                <input type = "button" id = "koef"  value = "Kореляція">
+                <input type = "text"  id = "inp_cor" value = "" size = "10">
+           </div>
+       </div> 
+       <div id="bef"></div>        
+    </form>
+    </div>
+    </div>
   
 </div>
 </section>
