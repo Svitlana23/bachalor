@@ -449,37 +449,7 @@ $(function () {
       </section>
 </header>
    
-    <section class="intro text-center section-padding" id="depth">
-      <div class="container">
-        <div class="row">
-         <div class="col-md-8 col-md-offset-2 wp1">
-             <h1 class="arrow">Розрахунок глибини затоплення</h1>
-         </div>
-         
-         <div class="col-md-5 col-md-offset-2 text-left">
-            <h4>Площа водозбору води, F (км²): <input name="F" id="F" type="text" value="200" size="10"></h4>
-            <h4>Швидкість води в річці до початку паводку, V0 (м/с): <input  name="V0" id="V0" type="text" value="1" size="10"></h4>
-            <h4>Ширина дна ріки, a0 (м): <input  name="a0" id="a0" type="text" value="80" size="10"></h4>
-        </div>
-        <div class="col-md-4 text-left">
-            <h4>Ширина ріки до паводку, b0 (м): <input  name="b0" id="b0" type="text" value="100" size="10"></h4>
-            <h4>Інтенсивність випадання осадків, J (мм/год): <input  name="J" id="J" type="text" value="25" size="10"></h4>
-            <h4>Глибина ріки до паводку, h0 (м): <input  name="h0" id="h0" type="text" value="1" size="10"></h4>
-        </div>
-        <div></div>
-        <div class="col-md-8 col-md-offset-2 text-center">
-            <input id="river_level" type="button" name="send" value="Обчислити">
-            <h1>Результат:</h1>
-            <div class="col-md-4 col-md-offset-1 text-left">
-                <h3>Глибина затоплення: <input  name="h3" id="h3" type="text" size="15"></h3>
-            </div>
-            <div class="col-md-7 text-left">
-                <h3>Швидкість потоку води під час паводку: <input  name="V3" id="V3" type="text" size="15"></h3>
-            </div>
-        </div>
-      </div>
-  </div>
-</section>
+  
 
 <section class="text-center" id="prediction">
     <div class="container">
@@ -666,7 +636,37 @@ $(function () {
 </div>
 </section>
 
-
+  <section class="intro text-center section-padding" id="depth">
+      <div class="container">
+        <div class="row">
+         <div class="col-md-8 col-md-offset-2 wp1">
+             <h1 class="arrow">Розрахунок глибини затоплення</h1>
+         </div>
+         
+         <div class="col-md-5 col-md-offset-2 text-left">
+            <h4>Площа водозбору води, F (км²): <input name="F" id="F" type="text" value="200" size="10"></h4>
+            <h4>Швидкість води в річці до початку паводку, V0 (м/с): <input  name="V0" id="V0" type="text" value="1" size="10"></h4>
+            <h4>Ширина дна ріки, a0 (м): <input  name="a0" id="a0" type="text" value="80" size="10"></h4>
+        </div>
+        <div class="col-md-4 text-left">
+            <h4>Ширина ріки до паводку, b0 (м): <input  name="b0" id="b0" type="text" value="100" size="10"></h4>
+            <h4>Інтенсивність випадання осадків, J (мм/год): <input  name="J" id="J" type="text" value="25" size="10"></h4>
+            <h4>Глибина ріки до паводку, h0 (м): <input  name="h0" id="h0" type="text" value="1" size="10"></h4>
+        </div>
+        <div></div>
+        <div class="col-md-8 col-md-offset-2 text-center">
+            <input id="river_level" type="button" name="send" value="Обчислити">
+            <h1>Результат:</h1>
+            <div class="col-md-4 col-md-offset-1 text-left">
+                <h3>Глибина затоплення: <input  name="h3" id="h3" type="text" size="15"></h3>
+            </div>
+            <div class="col-md-7 text-left">
+                <h3>Швидкість потоку води під час паводку: <input  name="V3" id="V3" type="text" size="15"></h3>
+            </div>
+        </div>
+      </div>
+  </div>
+</section>
 
 <!--
 <div class="text-center">
