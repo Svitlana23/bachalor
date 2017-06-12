@@ -48,11 +48,25 @@ $n1 = count($prec1);
 $n2 = count($prec2);
 for($i=0;$i<$n1;$i++)
 {
-    $fp1[$i]=(1000 * $L) / ($xp * $Ip * pow($A,(1/4)) * pow(($fi * $prec1[$i]), (1/4)));
+    $d = ($xp * $Ip * pow($A,(1/4)) * pow(($fi * $prec1[$i]), (1/4)));
+    if($d!=0){
+        $fp1[$i]=(1000 * $L) / $d;
+    }
+    else{
+        $fp1[$i] = 0;
+    }
+    
 }
 for($i=0;$i<$n2;$i++)
 {
-    $fp2[$i]=(1000 * $L) / ($xp * $Ip * pow($A,(1/4)) * pow(($fi * $prec2[$i]), (1/4)));
+    $d = ($xp * $Ip * pow($A,(1/4)) * pow(($fi * $prec2[$i]), (1/4)));
+    if($d!=0){
+        $fp2[$i]=(1000 * $L) / ($xp * $Ip * pow($A,(1/4)) * pow(($fi * $prec2[$i]), (1/4)));
+    }
+    else{
+        $fp2[$i]=0;
+    }
+    
 }
 
 if($_p == 1)
@@ -485,8 +499,7 @@ for($i=0;$i<$n2;$i++)
 $Q1 = json_encode($data_Q1);
 $Q2 = json_encode($data_Q2);
 
-$cor = json_encode(['Q1' => $Q1, 'Q2' => $Q2]);
-echo $cor;
+
 
 $result = mysql_query("SELECT id_inform FROM `data_q` WHERE id_user = '$user_id' ORDER BY id_inform DESC");
 
@@ -500,6 +513,8 @@ $id = $row['id_inform'];
 $sql_in="UPDATE `data_q` SET Q1 = '$Q1', Q2 = '$Q2' WHERE id_inform = '$id'";
 mysql_query($sql_in);
 
+$cor = json_encode(['Q1' => $data_Q1, 'Q2' => $data_Q2]);
+echo $cor;
 
 
 mysql_close($link);

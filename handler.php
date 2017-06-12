@@ -46,7 +46,14 @@ $prec = json_decode($prec,true);
 $n = count($prec);
 for($i=0;$i<$n;$i++)
 {
-    $fp[$i]=(1000 * $L) / ( $xp * $Ip * pow($A,(1/4)) * pow(($fi * $prec[$i]), (1/4)));
+    $d = ( $xp * $Ip * pow($A,(1/4)) * pow(($fi * $prec[$i]), (1/4)));
+    if($d!=0){
+       $fp[$i]=(1000 * $L) / $d; 
+    }
+    else{
+        $fp[$i] = 0;
+    }
+    
 }
 
 if($_p == 1)

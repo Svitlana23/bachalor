@@ -16,8 +16,7 @@ $result = mysql_query($query);
 $row = mysql_fetch_array($result);
 $Q1= json_decode($row['Q1'],true);
 $Q2 = json_decode($row['Q2'],true);
-$a = 1*0;
-$data = json_encode(['Q1'=>$Q1, 'Q2'=>$Q2, 'a'=>$a]);
+$data = json_encode(['Q1'=>$Q1, 'Q2'=>$Q2]);
 echo $data;
 mysql_close($link);
 ?>

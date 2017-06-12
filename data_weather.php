@@ -11,7 +11,7 @@ $end = $end->modify( '+1 day' );
 
 $n =date_diff($begin, $end);
 $day=$n->format('%a');
-echo "<br> n = ".$day."<br>";
+
 
 $period = new DatePeriod($begin, new DateInterval('P1D'), $end);
 
@@ -92,27 +92,15 @@ for($i=0; $i<$day; $i++)
     $level1[$i] = $row['level']/100; 
 }
 
-    $data = json_encode($Data);
-    $data_weather = json_encode($sum_prec);
-    $level = json_encode($level1);
-    
+$data = json_encode($Data);
+$data_weather = json_encode($sum_prec);
+$level = json_encode($level1);
 
 
+$sql_in="INSERT INTO `data_q` (id_user, date_interval, weather, level) VALUES ('$user_id' , '$data', '$data_weather', '$level')";
+mysql_query($sql_in);
 
-$result = mysql_query("SELECT id_inform FROM `data_q` WHERE id_user = '$user_id' ORDER BY id_inform DESC");
-
-if(mysql_num_rows($result) == 0)
-{
-    $sql_in="INSERT INTO `data_q` (id_user, date_interval, weather, level) VALUES ('$user_id' , '$data', '$data_weather', '$level')";
-    mysql_query($sql_in);
-}
-else{
-    $row = mysql_fetch_array($result);
-    $id = $row['id_inform'];
-
-    $sql_in="UPDATE `data_q` SET  date_interval = '$data', weather = '$data_weather', level = '$level'  WHERE id_inform = '$id'";
-    mysql_query($sql_in);
-}
 
 mysql_close($link);
+echo "success";
 ?>

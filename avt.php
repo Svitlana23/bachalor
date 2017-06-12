@@ -1,24 +1,23 @@
 <?php
-        if(isset($_POST['login']) && isset($_POST['password']))
-        {
-            session_start();
-            include "on.php";
-            $email = $_POST['login'];
-            $password = $_POST['password'];
-            $sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-            $result = mysql_query($sql);
-            
-            if(mysql_num_rows($result) == 0)
-            {
-                echo "<script>alert(\"Користувача з таким email та паролем не існує! Зареєструйтесь!\");</script>";
-                //header('Location: /ba/register.php');
-            }
-            else{
-                $row = mysql_fetch_array($result);
-                $_SESSION['user_id'] = $row['id_user'];
-                header('Location: /ba');
-            }
-        }
+if(isset($_POST['login']) && isset($_POST['password']))
+{
+    session_start();
+    include "on.php";
+    $email = $_POST['login'];
+    $password = $_POST['password'];
+    $sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+    $result = mysql_query($sql);
+
+    if(mysql_num_rows($result) == 0)
+    {
+        echo "<script>alert(\"Користувача з таким email та паролем не існує! Зареєструйтесь!\");</script>";
+    }
+    else{
+        $row = mysql_fetch_array($result);
+        $_SESSION['user_id'] = $row['id_user'];
+        header('Location: /ba');
+    }
+}
     //для виходу кнопка і ссилка, що перенаправляє на скріпт виходу , ссилка бо не треба відправляти дані
 ?>
 <?php
@@ -33,13 +32,13 @@
         $result = mysql_query("SELECT * FROM users WHERE email = '$email' AND username = '$username'");
         if(mysql_num_rows($result) == 0)
         {
-                $sql = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
-                mysql_query($sql);
-                $id = mysql_insert_id();
-                $_SESSION['user_id'] = $id;
-                echo "<script>alert(\"Авторизація пройшла успішно! Ви зареєстровані як\"".$username.");</script>";
-               
-                header('Location: /ba');
+            $sql = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
+            mysql_query($sql);
+            $id = mysql_insert_id();
+            $_SESSION['user_id'] = $id;
+            echo "<script>alert(\"Авторизація пройшла успішно! Ви зареєстровані як\"".$username.");</script>";
+
+            header('Location: /ba');
         }
         else{
             echo "<script>alert(\"Користувач з таким іменем вже зареєстрований\");</script>";
@@ -51,10 +50,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Avtorisation</title>
+    <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Open+Sans:600'>
     <link rel="stylesheet" href="css/style2.css">
-<!--    <link rel="stylesheet" href="css/bootstrap-theme.min.css">-->
     <link rel='stylesheet prefetch' href='css/fonts.css'>
-    <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
   <div class="login-wrap">
@@ -73,16 +71,13 @@
                             <input type="password" class="input" data-type="password" name="password">
                         </div>
                         <div class="group">
-                            <input id="check" type="checkbox" class="check" checked>
-                            <label for="check"><span class="icon"></span> Keep me Signed in</label>
+                            <br>
+                            <br>
                         </div>
                         <div class="group">
                             <button type="submit" class="button" name="submit">SIGN IN</button>
                         </div>
                         <div class="hr"></div>
-                        <div class="foot-lnk">
-                            <a href="#forgot">Forgot Password?</a>
-                        </div>
                     </form>
                 </div>
                 <div class="sign-up-htm">
@@ -107,9 +102,6 @@
                         <input type="submit" class="button" value="Sign Up" name="submit" id="reg">
                     </div>
                     <div class="hr"></div>
-                    <div class="foot-lnk">
-                        <label for="tab-1"><a href="">Already Member?</a></label>
-                    </div>
                     </form>
                 </div>
             </div>
