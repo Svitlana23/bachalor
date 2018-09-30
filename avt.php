@@ -51,8 +51,7 @@ if(isset($_POST['login']) && isset($_POST['password']))
     <meta charset="UTF-8">
     <title>Avtorisation</title>
     <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Open+Sans:600'>
-    <link rel="stylesheet" href="css/style2.css">
-    <link rel='stylesheet prefetch' href='css/fonts.css'>
+    <link rel="stylesheet" href="css/avt_style.css">
 </head>
 <body>
   <div class="login-wrap">

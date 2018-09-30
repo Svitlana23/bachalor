@@ -14,10 +14,10 @@ $end_cor2 = $end_cor2->modify( '+1 day' );
 
 $n1 =date_diff($begin_cor1, $end_cor1);
 $day1=$n1->format('%a');
-echo "<br> n = ".$day1."<br>";
+//echo "<br> n = ".$day1."<br>";
 $n2 =date_diff($begin_cor2, $end_cor2);
-$day2=$n2->format('%a');
-echo "<br> n = ".$day2."<br>";
+//$day2=$n2->format('%a');
+//echo "<br> n = ".$day2."<br>";
 
 $period1 = new DatePeriod($begin_cor1, new DateInterval('P1D'), $end_cor1);
 $period2 = new DatePeriod($begin_cor2, new DateInterval('P1D'), $end_cor2);

@@ -515,7 +515,5 @@ mysql_query($sql_in);
 
 $cor = json_encode(['Q1' => $data_Q1, 'Q2' => $data_Q2]);
 echo $cor;
-
-
 mysql_close($link);
 ?>

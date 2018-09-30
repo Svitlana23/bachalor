@@ -1,20 +1,6 @@
-/*@import url(https://fonts.googleapis.com/css?family=Lato);*/
-
-/*
-*, *:before, *:after{
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  font-family: 'Lato', sans-serif;
-}
-*/
-
 /*| Navigation |*/
 
 nav{
-  position: fixed;
   z-index: 999;
   top: 0;
   left: 0;
@@ -83,3 +69,90 @@ Hero
 .hero p { letter-spacing: 1px; }
 .learn-more-btn { background: rgba(61, 201, 179, 1); padding: 20px 40px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; color: #fff; text-transform: uppercase; letter-spacing: 1px; display: inline-block; -webkit-box-shadow: 0px 3px 0px 0px #309383; -moz-box-shadow: 0px 3px 0px 0px #309383; box-shadow: 0px 3px 0px 0px #309383; margin: 60px 0 0; font-weight: bold; }
 .learn-more-btn:hover, .learn-more-btn:focus { background: rgba(61, 201, 179, 0.6); color: #fff; }
+
+.user{
+    margin-top: 30px;
+    font-weight:bolder;
+    color:dodgerblue;
+    font-size: 16px;
+}
+.main_name{
+    font-size: 20px;
+    color:#171793
+}
+
+#map2 {
+    display: none;
+    width:80%;
+    height: 80%;
+/*    visibility: hidden;*/
+}
+#map_reduction {
+    display: none;
+    width:80%;
+    height: 80%;
+}
+input[type='text']{
+    border-radius: 5px;
+    width:50px;
+    text-align: center;
+    margin: 3px;
+}
+.maps{
+    border-radius: 10px;
+    height:40px;
+    background-color: #6c3fe8;
+    color:azure;
+    margin: 3px;
+}
+
+.btn_weath{
+    border-radius: 5px;
+    height:40px;
+    background-color: rgba(113, 122, 237, 0.59);
+    color:darkslateblue;
+    margin-top: 15px;
+}
+input[type='date']{
+    border-radius: 5px;
+    text-align: center;
+    background-color: blanchedalmond;
+    color:blue;
+    margin: 1px;
+}
+
+.btn_res{
+    border-radius: 5px;
+    height:40px;
+    background-color: rgba(15, 39, 88, 0.59);
+    color:#c0bfc9;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.btn_graph{
+    border-radius: 5px;
+    height:40px;
+    background-color: rgba(125, 81, 245, 0.59);
+    color:darkslateblue;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.res{
+    display: none;
+}
+#inp_cor{
+    display: none;
+}
+#inp_cor[type='text']{
+    width:80px;
+    height: 35px;
+}
+#prediction{
+    background-color: #eef0f4;
+}
+#depth{
+    background-color: #e3e3e6;
+}
+#map{
+    margin-top: 20px;
+}

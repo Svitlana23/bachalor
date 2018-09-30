@@ -4,7 +4,7 @@ var map;
         var data={};
         
     $(document).ready(function(){
-        
+      // alert("vafvdfv");
       map = new GMaps({
         el: "#map",
         lat: 48.26,
@@ -20,20 +20,15 @@ var map;
         mapTypeControl: false,
         overviewMapControl: false
       });
-        
-        
-     /*var marker = map.addMarker({
-              lat: 48.3,
-              lng: 25.5
-            });
-        marker.addListener("click", function (e){
-            alert("1111");   
-        });
+
         map.addListener("click", function (e){
-            if(state==0){
+            if(state==0) {
+                point.x = e.latLng.lng();
+                point.y1 = e.latLng.lat();
+                state = 1;
                 return;
             }
-            point.y = e.latLng.lat();
+            point.y2 = e.latLng.lat();
             console.log(point);
             $.ajax({
                 method:'get',
@@ -41,12 +36,12 @@ var map;
                 type:"GET",
                 dataType: "json",
                 data:point,
-                success: function (){
+                complete: function (){
                     state = 0;
                     alert("Point add!!!!");
                 }
             });
-        });*/
+        });
         
     });
         
@@ -106,7 +101,7 @@ var map;
                                     fillColor: '#fa0808',
                                     fillOpacity: 0
                         });
-                        
+
                         map.drawPolyline({                      //нижний берег ПОДТОПЛЕНИЕ
                                     path: data.draw5,
                                     strokeColor: '#fa0808',
@@ -115,7 +110,7 @@ var map;
                                     fillColor: '#fa0808',
                                     fillOpacity: 0
                         });
-                        
+
                         map.drawPolyline({                      //верхний берег ПОДТОПЛЕНИЕ
                                     path: data.draw6,
                                     strokeColor: '#fa0808',
@@ -124,19 +119,19 @@ var map;
                                     fillColor: '#fa0808',
                                     fillOpacity: 0
                         });
-                        
-                        /*var marker =
-                                map.addMarker({
-                                  lat: data.draw1[line][0][0],
-                                  lng: data.draw1[line][0][1]
-                                });
-                                marker.addListener("click", function (e){
-                                    state = 1;
-                                    point.x = e.latLng.lng();
-                                    
-                                });*/
+
+                        // var marker =
+                        //         map.addMarker({
+                        //           lat: data.draw1[line][0][0],
+                        //           lng: data.draw1[line][0][1],
+                        //         });
+                        //         marker.addListener("click", function (e){
+                        //             state = 1;
+                        //             point.x = e.latLng.lng();
+                        //
+                        //         });
                     
-                    }       
+                    }
             
                 });
             });

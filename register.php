@@ -13,13 +13,13 @@
         $result = mysql_query("SELECT * FROM users WHERE email = '$email' AND username = '$username'");
         if(mysql_num_rows($result) == 0)
         {
-                $sql = "INSERT INTO users (name, surname, username, email, password) VALUES ('$name', '$surname', '$username', '$email', '$password')";
-                mysql_query($sql);
-                $id = mysql_insert_id();
-                $_SESSION['user_id'] = $id;
-                echo "<script>alert(\"Авторизація пройшла успішно! Ви зареєстровані як\"".$username.");</script>";
-               
-                header('Location: /ba');
+            $sql = "INSERT INTO users (name, surname, username, email, password) VALUES ('$name', '$surname', '$username', '$email', '$password')";
+            mysql_query($sql);
+            $id = mysql_insert_id();
+            $_SESSION['user_id'] = $id;
+            echo "<script>alert(\"Авторизація пройшла успішно! Ви зареєстровані як\"".$username.");</script>";
+
+            header('Location: /ba');
         }
         else{
             echo "<script>alert(\"Користувач з таким іменем вже зареєстрований\");</script>";
@@ -36,7 +36,7 @@
 </head>
 <body>
     <form action="" method="post" id = "reg">
-           <br> name
+        <br> name
         <input type="text" name="name" id = "name">
         <br> surname
         <input type="text" name="surname" id="surname">
@@ -47,8 +47,7 @@
         <br>password
         <input type="password" name="password" id="password">
         <br>password2
-        <input type="password" name="password2" id="password2">
-        <br>
+        <input type="password" name="password2" id="password2"><br>
         <input type="submit" name="submit" id = "reg" value="Зареєструватись">
         <a href="avt.php">Увійти</a>
     </form>

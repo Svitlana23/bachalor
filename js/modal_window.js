@@ -87,12 +87,16 @@ $(function () {
                 console.log("M = " + $depth.M);
                 $('#h3').val($depth.h3);
                 $('#V3').val($depth.V3);
-                $('#res1').text("слой стока y = " + $depth.y);
-                $('#res2').text("коефіціент стока a = " + $depth.a);
-            }    
-    });
+                $('#res1').val($depth.y);
+                // $('#res1').text("слой стока y = " + $depth.y);
+                // $('#res2').text("коефіціент стока a = " + $depth.a);
+            }
+        });
     });
 });
+
+
+
 
 $(function () {
     $("#cor_weather").bind("click", function (e){
@@ -144,7 +148,7 @@ $(function () {
             },
             success: function funcS($data){
                 var corr = spearson.correlation.spearman($data.Q1, $data.Q2, true);
-                console.log("corr = " + corr);
+                corr = corr.toFixed(2);
                 $('#inp_cor').val(corr);
                 $('#modal_close, #overlay').click();
             }    
