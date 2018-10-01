@@ -120,6 +120,21 @@ var map;
                                     fillOpacity: 0
                         });
 
+                         map.drawRectangle({
+                            strokeColor: '#fff74b',
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: '#ff55fa',
+                            fillOpacity: 0.35,
+                            map: map,
+                            bounds: {
+                                north: 48.26,
+                                south: 47.0,
+                                east: 25.12,
+                                west: 26.12
+                            }
+                        });
+
                         // var marker =
                         //         map.addMarker({
                         //           lat: data.draw1[line][0][0],

@@ -33,6 +33,7 @@
     <script src="js/modal_window.js"></script>
     <script src="js/graphics.js"></script>
     <script src="js/river.js"></script>
+    <script src="js/graph_river.js"></script>
 </head>
 <body>
 <header>
@@ -353,14 +354,34 @@
             <button id="submit2"> Побудувати річку </button>
             </form>
             </center>
+
         </div>
     </div>
+
+
+
     <div class="row">
             <div class="span11">
             <div id="map"></div>
         </div>
         </div>
+
+    <div class="row">
+        <div class="col-md-6 text-left">
+            <input type="button" class="btn_graph" id="river_g" onclick="location.href='#river_graph'" value="Графік H">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <div id="river_graph">
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
+
 
 
 <!-- Кореляція-->

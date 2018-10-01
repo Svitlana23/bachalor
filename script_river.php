@@ -24,6 +24,10 @@ $row    = mysql_fetch_array($result);
     //echo json_encode(['draw1'=>[]]);
     //exit;
     //}
+
+
+
+
 $level = $row['level'];                                                         // рівень воды (Table :: water_level)
 $d = ($level - 42)/100;                                                            // delta
 
@@ -160,4 +164,14 @@ foreach ($array as $item)
 //------------------------------------------------------------------------------
 
 echo json_encode([ 'draw1'=> $draw1, 'draw2' => $draw2, 'draw3' => $draw3, 'draw4' => $draw4, 'draw5' => $draw5, 'draw6' => $draw6]);
+
+
+
+
+//$result = mysql_query("SELECT * FROM build_river");
+//while ($row = mysql_fetch_array($result))
+//{
+//    $zz[] = ['z'=>$row['z']];
+//}
+
 ?>
